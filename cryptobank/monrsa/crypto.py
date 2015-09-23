@@ -33,9 +33,9 @@ class Key:
 
     def import_key(base64_encoded_key):
         return
-    
+
     def sign(self, rawdata):
         return ""
 
-    def verify(self,):
+    def verify(self, rawdata, signature):
         return False

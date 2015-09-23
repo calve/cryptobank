@@ -108,6 +108,13 @@ On représentera et transmettra les chèques en JSON :
 Crée une paire de clé pour la banque
 
 
+## Tests
+
+Run units tests with
+
+    python3 -m unittest
+
+from the root directory
 
 ## A FAIRE
 
