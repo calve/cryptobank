@@ -11,7 +11,8 @@ _prime_trials = 2
 
 def _text2Int(text):
     """Convert a text string into an integer"""
-    return reduce(lambda x, y : (x << 8) + y, map(ord, text))
+    return reduce(lambda x, y: (x << 8) + y, map(ord, text))
+
 
 def _int2Text(number, size=512):
     """Convert an integer into a text string"""
@@ -37,6 +38,7 @@ def _get_e(phi):
         e = random.randint(0, phi)
         if gcd(e, phi) == 1:
             return e
+
 
 def _egcd(a, b):
     x, y, u, v = 0, 1, 1, 0
@@ -101,50 +103,90 @@ def _is_prime(n):
     return all(n % i for i in islice(count(2), int(sqrt(n)-1)))
 
 
+def _serialize(o):
+    """
+    Encode a python dictionnary to a printable base64-encoded string
+    """
+    return base64.b64encode(json.dumps(o).encode())
+
+
+def _unserialize(s):
+    """
+    Decode a base64-encoded string to a python dictionnary
+    """
+    return json.loads(base64.b64decode(s).decode())
+
+
 def generate_keys(n=2048):
-    p = _get_prime(n)
-    q = _get_prime(n)
+    p = _get_prime(n//2)
+    q = _get_prime(n//2)
     n = p * q
     phi = n - (p + q - 1)
     e = _get_e(phi)
     d = _invmod(e, phi)
     return Key(n, d, e)
 
+
 class Key:
-    def __init__(self, n, d, e):
+    def __init__(self, n, e, d=None):
         self.n = n
         self.e = e
-        self.d = d
+        if d:
+            self.d = d
 
-    def get_pub():
-        return (n, e)
-
-    def get_private():
-        return (n, d)
-
-    def import_key(base64_encoded_key):
-        return
-
-    def import_key_from_path(filepath):
+    def get_pub(self):
         """
-        Import a key from the specified path
+        Returns a base64-encoded string representing the public key
         """
-        return
+        public_parts = {
+            "modulus": self.n,
+            "encryption exponent": self.e,
+        }
+        return _serialize(public_parts).encode()
+
+    def get_private(self):
+        """
+        Returns a base64-encoded string representing the private key
+        """
+        private_parts = {
+            "modulus": self.n,
+            "encryption exponent": self.e,
+            "decryption exponent": self.d,
+        }
+        return _serialize(private_parts).encode()
+
+    @classmethod
+    def import_key(cls, base64_encoded_key):
+        rawdict = _unserialize(base64_encoded_key)
+        k = Key(rawdict["modulus"], rawdict["encryption exponent"])
+        if "decryption exponent" in rawdict:
+            k.d = rawdict["decryption exponent"]
+        return k
+
+    @classmethod
+    def import_key_from_path(cls, filepath):
+        """
+        Import a key from the specified path:
+        Usage :
+        >>> from monrsa.crypto import Key
+        >>> pubkey = Key.import_key_from_path("~/key.pubkey")
+        """
+        with open(filepath, "r") as file_:
+            body = file_.read()
+        return cls.import_key(body)
 
     def sign(self, rawdata):
         raw = _text2Int(rawdata)
         m = raw % self.n
         sign = pow(m, self.d, self.n)
-        print("signature : {}".format(sign))
         representable = base64.b64encode(_int2Text(sign).encode())
         return representable
 
     def verify(self, rawdata, signature):
         binary_sign = base64.b64decode(signature)
         c = _text2Int(binary_sign.decode())
-        result = pow(c, self.e, self.n)
-        print("verified result {} ({})".format(result, _int2Text(result)))
-        return result == _text2Int(rawdata)
+        original = pow(c, self.e, self.n)
+        return original == _text2Int(rawdata)
 
     def __str__(self):
-        return " - ".join([str(self.n), str(self.e), str(self.d)])
+        return self.get_pub()
