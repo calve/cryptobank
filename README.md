@@ -23,26 +23,99 @@ Il y a plusieurs choses à vérifier :
   1. Que le client ne puisse utiliser le même chèque pour plusieurs transaction
   2. Que le marchant ne puisse générer tout plein de chèque valide au nom du client
 
-Vérification par le marchant que le client est bien un client de la banque
-Le client envoie la signature ainsi que sa clef publique au marchant.
-Le marchant vérifie grâce a la clef publique de la banque que la signature du client est valide
-Le marchant envoie au client un message chiffré
-Le client le déchiffre et l'envoie au marchant
-Si le message est le bon, le marchant envoie un nombre aléatoire (ou un numéro de transaction qu'il incrémente a chaque transaction) au client + id du client + destinataire.
-Le client signe avec sa clef privée le message suivant : montant de la transaction, identifiant du commerçant, numéro aléatoire envoyé par le marchant.
-Le marchant vérifie que cette signature est valide grâce à la clef publique du client
-Si la signature est valide, la transaction est validée.
-La banque doit garder le token
+## Vérification par le marchant que le client est bien un client de la banque
+
+  + Le client envoie la signature ainsi que sa clef publique au marchant.
+  + Le marchant vérifie grâce a la clef publique de la banque que la signature du client est valide
+  + Le marchant envoie un nombre aléatoire
+  + Le client signe avec sa clef privée le message contenant
+    - montant de la transaction ``amount``
+    - identifiant du commerçant ``merchant_id``
+    - numéro aléatoire envoyé par le marchant ``token``
+    - clé publique du client ``signed_custommer_public_key``
+  + Le marchant vérifie que cette signature est valide grâce à la clef publique du client
+  + Le marchant vérifie que le contenu du chèque est ce qu'il attend (montant, ordre, nombre aléatoire)
+  + Si la signature est valide, il remet le chèque à la banque
+  + La banque vérifie la signature du client
+  + La banque vérifie que le token n'est pas déjà enregistré
+  + La banque enregistre le tuple ``(token, id_merchant, id_custommer)``
+  + La banque effectue le paiement
+
+
+## Description du chèque
+
+On représentera et transmettra les chèques en JSON :
+
+### Chèque en clair:
+
+```
+
+{
+    "amount": 4200,
+    "signed_custommer_public_key": "Y2zDqXB1YmxpcXVlc2lnbsOpCg==",
+    "merchant_id": 01,
+    "token": "381de8be5e622bcc0bf72d399f907e6b"
+}
+
+```
+
+
+### Chèque signé :
+
+```
+{
+    "check" : {
+        "amount":4200,
+        ...
+    },
+    "signature":"cmFuZG9tY2zDqXB1YmxpcXVlc2lnbsOpCg=="
+}
+```
+
+
+## Binaires
+
+### Programme client
+
+   - Générer une paire de clé
+   - Lire une clé signée
+   - Créer un chèque :
+      - Entrées :
+        - ``token``
+        - ``amount``
+        - ``merchant_id``
+      - Sortie :
+        - Chèque signé sur ``stdout``
+
+
+### Programme marchant
+
+  - Vérifier une signature
+  - Générer un ``token``
+  - Vérifier le chèque
+
+### Programme banque
+
+  - Générer une paire de clé
+  - Signer la clé d'un client
+  - Vérifier la signature du chèque
+  - Vérifier que le tuple ``(token, merchant, custommer)`` n'est pas déjà dans la base
+  - Stockes le tuple ``(token, merchant, custommer)``
+
+
+### Programme d'initialisation
+
+Crée une paire de clé pour la banque
+
 
 
 ## A FAIRE
 
-  + Description du cheque
   + 4 programmes
   + commercant produit une facture
   + client fabrique le cheque
   + le commervant verifie le cheque
   + banque encaisse ou pas
   + ex : taper commercar_facture une somme genere une facture
-  + on donne ca en entrée d'un autre prog qui génère le 
+  + on donne ca en entrée d'un autre prog qui génère le
   + pouvoir passer les fichiers d'entrée en param
