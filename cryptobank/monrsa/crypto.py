@@ -34,6 +34,12 @@ class Key:
     def import_key(base64_encoded_key):
         return
 
+    def import_key_from_path(filepath):
+        """
+        Import a key from the specified path
+        """
+        return
+
     def sign(self, rawdata):
         return ""
 
