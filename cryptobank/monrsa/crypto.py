@@ -1,22 +1,31 @@
 import random
 
-def get_prime(n):
+def _get_prime(n):
     """Return a prime inferior to n"""
-    return n-1
+    while True:
+        prime = random.randint(0, n)
+        if _is_prime(prime):
+            return prime
 
-def get_e(phi):
+def _get_e(phi):
     return 1
 
-def invmod(a, b):
+def _invmod(a, b):
     return 1
+
+def _is_prime(n):
+    for x in range(2,n):
+        if n%x == 0:
+            return False
+    return True
 
 def generate_keys(n=2048):
-    p = get_prime(n)
-    q = get_prime(n)
+    p = _get_prime(n)
+    q = _get_prime(n)
     n = p * q
     phi = n - (p + q - 1)
-    e = get_e(phi)
-    d = invmod(e, phi)
+    e = _get_e(phi)
+    d = _invmod(e, phi)
     return Key(n, d, e)
 
 class Key:

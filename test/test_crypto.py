@@ -1,5 +1,5 @@
 import unittest
-from cryptobank.monrsa.crypto import generate_keys, Key
+from cryptobank.monrsa.crypto import generate_keys, Key, _is_prime, _get_prime
 
 class TestCrypto(unittest.TestCase):
 
@@ -17,3 +17,12 @@ class TestCrypto(unittest.TestCase):
         self.assertNotEquals(key1.e, key1.d)
         self.assertNotEquals(key1.e, key2.e)
         self.assertNotEquals(key1.d, key2.d)
+
+    def test_prime(self):
+        for n in [1, 3, 5, 7, 13, 17, 31]:
+            self.assertTrue(_is_prime(n))
+        for n in [4, 6, 9, 15, 20, 100]:
+            self.assertFalse(_is_prime(n))
+
+    def test_prime_gen(self):
+        self.assertTrue(_is_prime(_get_prime(2048)))
