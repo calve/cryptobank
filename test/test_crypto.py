@@ -7,9 +7,11 @@ class TestCrypto(unittest.TestCase):
         key = generate_keys()
         random_words = "unephraseauhasard"
         signature = key.sign(random_words)
+        print(key)
+        print(signature)
         self.assertTrue(key.verify(random_words, signature))
-        self.assertFalse(key.verify("plopplopplop", signature))
-        self.assertFalse(key.verify(random_words, "notasignature"))
+        self.assertFalse(key.verify(b"plopplopplop", signature))
+        self.assertFalse(key.verify(random_words, b"notasignature"))
 
     def test_key_gen(self):
         key1 = generate_keys()

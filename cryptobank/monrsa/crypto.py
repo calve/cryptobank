@@ -1,4 +1,17 @@
 import random
+from fractions import gcd
+import base64
+from functools import reduce
+
+def _text2Int(text):
+    """Convert a text string into an integer"""
+    return reduce(lambda x, y : (x << 8) + y, map(ord, text))
+
+def _int2Text(number, size=512):
+    """Convert an integer into a text string"""
+    text = "".join([chr((number >> j) & 0xff)
+                    for j in reversed(range(0, size << 3, 8))])
+    return text.lstrip("\x00")
 
 def _get_prime(n):
     """Return a prime inferior to n"""
@@ -8,9 +21,26 @@ def _get_prime(n):
             return prime
 
 def _get_e(phi):
-    return 1
+    while True:
+        e = random.randint(0, phi)
+        if gcd(e, phi) == 1:
+            return e
 
-def _invmod(a, b):
+def _egcd(a, b):
+    x, y, u, v = 0, 1, 1, 0
+    while a != 0:
+        q, r = b//a, b % a
+        m, n = x-u*q, y-v*q
+        b, a, x, y, u, v = a, r, u, v, m, n
+    gcd = b
+    return gcd, x, y
+
+def _invmod(a, m):
+    g, x, y = _egcd(a, m)
+    if g != 1:
+        raise Exception('modular inverse does not exist')
+    else:
+        return x % m
     return 1
 
 def _is_prime(n):
@@ -50,7 +80,19 @@ class Key:
         return
 
     def sign(self, rawdata):
-        return ""
+        raw = _text2Int(rawdata)
+        m = raw % self.n
+        sign = pow(m, self.d, self.n)
+        print("signature : {}".format(sign))
+        representable = base64.b64encode(_int2Text(sign).encode())
+        return representable
 
     def verify(self, rawdata, signature):
-        return False
+        binary_sign = base64.b64decode(signature)
+        c = _text2Int(binary_sign.decode())
+        result = pow(c, self.e, self.n)
+        print("verified result {} ({})".format(result, _int2Text(result)))
+        return result == _text2Int(rawdata)
+
+    def __str__(self):
+        return " - ".join([str(self.n), str(self.e), str(self.d)])
