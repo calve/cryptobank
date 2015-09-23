@@ -64,7 +64,7 @@ On représentera et transmettra les chèques en JSON :
 
 ```
 {
-    "check" : {
+    "transaction" : {
         "amount":4200,
         ...
     },
