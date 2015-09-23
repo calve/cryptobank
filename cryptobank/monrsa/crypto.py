@@ -1,7 +1,13 @@
-import random
 from fractions import gcd
-import base64
 from functools import reduce
+from itertools import count, islice
+from math import sqrt
+import base64
+import json
+import random
+
+_prime_trials = 2
+
 
 def _text2Int(text):
     """Convert a text string into an integer"""
@@ -13,12 +19,18 @@ def _int2Text(number, size=512):
                     for j in reversed(range(0, size << 3, 8))])
     return text.lstrip("\x00")
 
+
 def _get_prime(n):
-    """Return a prime inferior to n"""
-    while True:
-        prime = random.randint(0, n)
-        if _is_prime(prime):
-            return prime
+    """
+    Returns a random prime number of size n bits
+    """
+    r = 1
+    while not _is_prime(r):
+        print(".", end="", flush=True)
+        r = random.getrandbits(n) | (2**(n-1))
+    print("+")
+    return r
+
 
 def _get_e(phi):
     while True:
@@ -35,19 +47,59 @@ def _egcd(a, b):
     gcd = b
     return gcd, x, y
 
+
 def _invmod(a, m):
     g, x, y = _egcd(a, m)
     if g != 1:
         raise Exception('modular inverse does not exist')
     else:
         return x % m
-    return 1
+
 
 def _is_prime(n):
-    for x in range(2,n):
-        if n%x == 0:
+    """
+    Returns whether a number is a prime number
+    """
+    if n <= 2:
+        return False
+    # special case 2
+    if n == 2:
+        return True
+    # ensure n is odd
+    if n % 2 == 0:
+        return False
+    # write n-1 as 2**s * d
+    # repeatedly try to divide n-1 by 2
+    s = 0
+    d = n-1
+    while True:
+        quotient, remainder = divmod(d, 2)
+        if remainder == 1:
+            break
+        s += 1
+        d = quotient
+    assert(2**s * d == n-1)
+
+    # test the base a to see whether it is a witness for the compositeness of n
+    def try_composite(a):
+        if pow(a, d, n) == 1:
             return False
-    return True
+        for i in range(s):
+            if pow(a, 2**i * d, n) == n-1:
+                return False
+        return True  # n is definitely composite
+
+    for i in range(_prime_trials):
+        a = random.randrange(2, n)
+        if try_composite(a):
+            return False
+
+    return True  # no base tested showed n as composite
+
+    if n < 2:
+        return False
+    return all(n % i for i in islice(count(2), int(sqrt(n)-1)))
+
 
 def generate_keys(n=2048):
     p = _get_prime(n)
