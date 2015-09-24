@@ -1,8 +1,7 @@
 #! /usr/bin/env python3
-from monrsa.crypto import Key 
-from monrsa.tools import *
 import sys
-import base64
+from monrsa.crypto import Key
+from monrsa.tools import save_rsa_keys
 
 
 def verify(check, pubkey):
@@ -33,9 +32,7 @@ def sign_key(raw_data_path):
     bank_key = Key.import_key_from_path("bank.key")
     with open(raw_data_path, "r") as file_:
         data = file_.read()
-    data_string = str(unserialize(data))
-    return bank_key.sign(data_string)
-
+    return bank_key.sign(data)
 
 
 
