@@ -1,22 +1,24 @@
 ## Initialisation
 
+echo "Generate bank database and keys"
 ./bank --generate-database
 ./bank --generate-keys  # crée bank.pubkey & bank.key
+
+echo "Generate customer key"
 ./customer --generate-keys # crée customer.pubkey & customer.key
-./bank --sign-key customer.pubkey >> customer.signedkey
 
-### Transaction
+echo "Sign customer key by the bank"
+./bank --sign-key customer.pubkey > customer.signedkey
 
-
-# Le marchant prépare le chèque pour le client
+echo "Le marchant prépare le chèque pour le client"
 #  - il vérifie la clé signé du client
 #  - si ok, il crée un json pret-a-signer
-./merchant --new-transaction customer.signedkey --amount 42 >> transaction.json
+./merchant --new-transaction customer.signedkey --amount 42 > transaction.json
 
-# Le client prend le chèque, et appose sa signature
-./customer --private-key customer.key --sign transaction.json >> check.json
+echo "Le client prend le chèque, et appose sa signature"
+./customer --private-key customer.key --sign transaction.json > check.json
 
-# Le marchant vérifie que le chèque est conforme à la transaction
+echo "Le marchant vérifie que le chèque est conforme à la transaction"
 # Écris sur la sortie standard `ok` ou `pas ok`
 # Retourne 0 si OK, 1 si KO
 ./merchant --transaction transaction.json --check check.json --client-pubkey client.pubkey
@@ -24,5 +26,5 @@
 ## if last_return_code == ok
 ##
 
-# La banque vérifie que le chèque est valide et l'encaisse
+echo "La banque vérifie que le chèque est valide et l'encaisse"
 ./bank --deposit check.json

@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 from monrsa.crypto import Key 
 from monrsa.tools import *
 import sys
