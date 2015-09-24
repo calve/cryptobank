@@ -1,4 +1,4 @@
-from monrsa.crypto import Key
+from monrsa.crypto import *
 import sys
 
 def print_error(string):
@@ -29,19 +29,27 @@ def print_help_message():
 
 
 
+
+
 # we check that we have more than one argument.
 # If not, we print the help message
 if len(sys.argv) == 1:
+    print(Key.get_pub())
     print_help_message()
 else:
+    if sys.argv[1] == "--generate-keys": 
+        myKey = generate_keys()
+        file = open("bank.pubkey", "w")
+        file.write(myKey.get_pub())
+        file.close()
+        #print(myKey.get_pub())
     # we check that the transaction to do is a new transaction
-    if sys.argv[1] == "--new-transaction":
+    elif sys.argv[1] == "--new-transaction":
          new_transaction(sys.argv)   
     # or a transaction (the merchant checks that the signature is valid and that the check's content is the one he expected)
     elif sys.argv[1] == "--transaction":
         print("yoyo")
     else:
-
         print_help_message()
 '''
 def verify_transaction(transactionpath, checkpath, clientpubkeypath):
