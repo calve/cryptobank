@@ -1,22 +1,7 @@
-from monrsa.crypto import Key
-from monrsa.tools import save_rsa_keys 
+from monrsa.crypto import Key 
+from monrsa.tools import *
 import sys
-
-
-
-
-def generate_keys():
-    keys = generate_keys()
-    with open(filename, "w") as file_:
-        file_.write(keys.get_pub())
-    with open(filename, "w") as file_:
-        file_.write(keys.get_private())
-
-def sign(rawdata):
-    with open(bankpubkey, "r") as file_:
-        bank_privatekey = Key.import_key(file_.readline)
-    signature = bank_privatekey.sign(rawdata)
-    return signature
+import base64
 
 
 def verify(check, pubkey):
@@ -34,6 +19,24 @@ def generate_database():
     db.close()
 
 
+def sign_key(raw_data_path):
+    """
+    Sign the key if the customer
+    To do so :
+        - we import the bank private key
+        - we open the customer's public key
+        - we sign the public key
+        - we print it
+    """
+    bank_key = Key.import_key_from_path("bank.key")
+    with open(raw_data_path, "r") as file_:
+        data = file_.read()
+    
+    return bank_key.sign(data)
+
+
+
+
 if len(sys.argv) == 1:
     print_help_message()
 else:
@@ -42,6 +45,8 @@ else:
         generate_database()
     elif sys.argv[1] == "--generate-keys": 
         save_rsa_keys("bank.pubkey", "bank.key")
+    elif sys.argv[1] == "--sign-key": 
+        print(sign_key(sys.argv[2]).decode())
 
     else:
         print_help_message()
