@@ -1,5 +1,7 @@
-from monrsa.crypto import *
+from monrsa.crypto import Key
+from monrsa.tools import save_rsa_keys 
 import sys
+
 
 def print_error(string):
     print(string)
@@ -11,7 +13,7 @@ def new_transaction(arguments):
     if arguments[3] != "--amount" or len(arguments) != 5:
         print_error("error")
     
-    # singnedkey  = Key.import_key_from_path(arguments[2])
+    singnedkey  = Key.import_key_from_path(arguments[2])
     amount      = arguments[4]
       
 '''    with open(bankfile) as file_:
@@ -28,21 +30,14 @@ def print_help_message():
     print('help')
 
 
-
-
-
 # we check that we have more than one argument.
 # If not, we print the help message
 if len(sys.argv) == 1:
-    print(Key.get_pub())
     print_help_message()
 else:
+
     if sys.argv[1] == "--generate-keys": 
-        myKey = generate_keys()
-        file = open("bank.pubkey", "w")
-        file.write(myKey.get_pub())
-        file.close()
-        #print(myKey.get_pub())
+        save_rsa_keys("bank.pubkey", "bank.key")
     # we check that the transaction to do is a new transaction
     elif sys.argv[1] == "--new-transaction":
          new_transaction(sys.argv)   
