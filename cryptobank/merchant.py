@@ -36,10 +36,8 @@ if len(sys.argv) == 1:
     print_help_message()
 else:
 
-    if sys.argv[1] == "--generate-keys": 
-        save_rsa_keys("bank.pubkey", "bank.key")
     # we check that the transaction to do is a new transaction
-    elif sys.argv[1] == "--new-transaction":
+    if sys.argv[1] == "--new-transaction":
          new_transaction(sys.argv)   
     # or a transaction (the merchant checks that the signature is valid and that the check's content is the one he expected)
     elif sys.argv[1] == "--transaction":
