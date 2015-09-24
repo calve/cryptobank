@@ -142,7 +142,7 @@ class Key:
             "modulus": self.n,
             "encryption exponent": self.e,
         }
-        return _serialize(public_parts).encode()
+        return _serialize(public_parts)
 
     def get_private(self):
         """
@@ -153,7 +153,7 @@ class Key:
             "encryption exponent": self.e,
             "decryption exponent": self.d,
         }
-        return _serialize(private_parts).encode()
+        return _serialize(private_parts)
 
     @classmethod
     def import_key(cls, base64_encoded_key):
