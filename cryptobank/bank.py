@@ -27,12 +27,13 @@ def sign_key(raw_data_path):
         - we open the customer's public key
         - we sign the public key
         - we print it
+    WARNING : we have to work on a string so we first have to "de-base64" the customer's key and then sign it
     """
     bank_key = Key.import_key_from_path("bank.key")
     with open(raw_data_path, "r") as file_:
         data = file_.read()
-    
-    return bank_key.sign(data)
+    data_string = str(unserialize(data))
+    return bank_key.sign(data_string)
 
 
 

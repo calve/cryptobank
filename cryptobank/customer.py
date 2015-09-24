@@ -10,10 +10,10 @@ def sign_check(privatekeypath, transactionpath):
 
 
 
+
 if len(sys.argv) == 1:
     print_help_message()
 else:
-
     if sys.argv[1] == "--generate-keys": 
         save_rsa_keys("customer.pubkey", "customer.key")
 

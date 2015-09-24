@@ -8,14 +8,39 @@ def print_error(string):
     return False
 
 
+def check_key(signed_key):
+    """
+    Will check that the key passed as a parameter is correct
+        - loads the bank's public key
+        - opens the signature
+        - opens the client's public key
+        - checks the key again the signature
+    """
+    bank_key  = Key.import_key_from_path("bank.pubkey")
+    with open(signed_key, "r") as file_:
+        signature = file_.read()
+        file_.close()
+    with open("customer.pubkey", "r") as file_:
+        customer_key = file_.read()
+        file_.close()
+    print(type(signature))
+    return bank_key.verify(customer_key, signature)
+
+
 def new_transaction(arguments):
+    """
+    Generates a new transaction.
+    Checks that the customer's key is valid
+    iGenerates a check for the customer to sign
+    
+    """
     # check that we have an amount in the arguments supplied
     if arguments[3] != "--amount" or len(arguments) != 5:
         print_error("error")
     
-    singnedkey  = Key.import_key_from_path(arguments[2])
     amount      = arguments[4]
-      
+    signed_key  = arguments[2]
+    print(check_key(signed_key))
 '''    with open(bankfile) as file_:
         bankkey = Key.import_key(file_.readlines())
     if not bankkey.verify(signedkey):
