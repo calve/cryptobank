@@ -1,4 +1,9 @@
-from monrsa import Key, generate_keys
+from monrsa.crypto import Key
+from monrsa.tools import save_rsa_keys 
+import sys
+
+
+
 
 def generate_keys():
     keys = generate_keys()
@@ -17,3 +22,15 @@ def sign(rawdata):
 def verify(check, pubkey):
     custommer_key = RSA.importKey(pubkey)
     custommer_key.verify(check['signature'])
+
+
+
+if len(sys.argv) == 1:
+    print_help_message()
+else:
+
+    if sys.argv[1] == "--generate-keys": 
+        save_rsa_keys("bank.pubkey", "bank.key")
+
+    else:
+        print_help_message()
