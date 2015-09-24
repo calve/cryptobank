@@ -25,11 +25,22 @@ def verify(check, pubkey):
 
 
 
+def generate_database():
+    """
+    Generates a blank file for the bank to use as a database
+    """
+    db   = open("bank_db.db", "w")
+    db.write("")
+    db.close()
+
+
 if len(sys.argv) == 1:
     print_help_message()
 else:
 
-    if sys.argv[1] == "--generate-keys": 
+    if sys.argv[1] == "--generate-database":
+        generate_database()
+    elif sys.argv[1] == "--generate-keys": 
         save_rsa_keys("bank.pubkey", "bank.key")
 
     else:
