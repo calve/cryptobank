@@ -11,7 +11,7 @@
 # Le marchant prépare le chèque pour le client
 #  - il vérifie la clé signé du client
 #  - si ok, il crée un json pret-a-signer
-./merchant --amount 42 --new-transaction custommer.signedkey >> transaction.json
+./merchant --new-transaction custommer.signedkey --amount 42 >> transaction.json
 
 # Le client prend le chèque, et appose sa signature
 ./custommer --private-key custommer.key --sign transaction.json >> check.json
