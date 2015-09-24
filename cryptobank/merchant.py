@@ -1,5 +1,5 @@
 from monrsa.crypto import Key
-from monrsa.tools import save_rsa_keys 
+from monrsa.tools import * 
 import sys
 
 
@@ -23,8 +23,8 @@ def check_key(signed_key):
     with open("customer.pubkey", "r") as file_:
         customer_key = file_.read()
         file_.close()
-    print(type(signature))
-    return bank_key.verify(customer_key, signature)
+    print(unserialize(customer_key))
+    return bank_key.verify(str(unserialize(customer_key)), signature)
 
 
 def new_transaction(arguments):
