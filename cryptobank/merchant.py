@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 from monrsa.crypto import Key
-from monrsa.tools import * 
+from monrsa.tools import save_rsa_keys 
+import argparse
 import sys
 
 
@@ -28,20 +29,14 @@ def check_key(signed_key):
     return bank_key.verify(str(unserialize(customer_key)), signature)
 
 
-def new_transaction(arguments):
+def new_transaction(signed_key, amount):
     """
     Generates a new transaction.
     Checks that the customer's key is valid
     iGenerates a check for the customer to sign
     
     """
-    # check that we have an amount in the arguments supplied
-    if arguments[3] != "--amount" or len(arguments) != 5:
-        print_error("error")
-    
-    amount      = arguments[4]
-    signed_key  = arguments[2]
-    print(check_key(signed_key))
+    print(signed_key)
 '''    with open(bankfile) as file_:
         bankkey = Key.import_key(file_.readlines())
     if not bankkey.verify(signedkey):
@@ -52,31 +47,35 @@ def new_transaction(arguments):
     }
     return json
 '''
-def print_help_message():
-    print('help')
+def main():
+    # Install the argument parser. Initiate the description with the docstring
+    argparser = argparse.ArgumentParser(description=sys.modules[__name__].__doc__)
+    argparser.add_argument("--new-transaction",  # This is a binary option
+                           help="Checks that the customer's key is correct and if so, creates a check ready to be signed")
+    argparser.add_argument("--transaction",  # This is also a binary option
+                           action="store_true",
+                           help="Checks that the check is valid. If it is OK it returns 0, otherwise it returns 1")
+    argparser.add_argument("--amount",  # This is also a binary option
+                           help="The amount of the transaction")
+    arguments = argparser.parse_args()
 
-
-# we check that we have more than one argument.
-# If not, we print the help message
-if len(sys.argv) == 1:
-    print_help_message()
-else:
-
-    # we check that the transaction to do is a new transaction
-    if sys.argv[1] == "--new-transaction":
-         new_transaction(sys.argv)   
-    # or a transaction (the merchant checks that the signature is valid and that the check's content is the one he expected)
-    elif sys.argv[1] == "--transaction":
+    # Now do things depending of the collected arguments
+    if arguments.new_transaction:
+        if arguments.amount:
+            new_transaction(arguments.new_transaction, arguments.amount)   
+            print("ok")
+        else:
+            print("ko")
+    if arguments.transaction:
         print("yoyo")
-    else:
-        print_help_message()
-'''
-def verify_transaction(transactionpath, checkpath, clientpubkeypath):
-    # verification de la clef du client
-    bankpubkey = Key.import_key_from_path(bank.pubkey) 
-    clientpubkey = Key.import_key_from(clientpubkeypath)
-    # verify check['transaction']==transaction
-    signature = check['signature']
-    clientpubkey.verify(rawdata, signature)
 
-'''
+
+# This is a Python's special:
+# The only way to tell wether we are running the program as a binary,
+# or if it was imported as a module is to check the content of
+# __name__.
+# If it is `__main__`, then we are running the program
+# standalone, and we run the main() function.
+if __name__ == "__main__":
+    main()
+
