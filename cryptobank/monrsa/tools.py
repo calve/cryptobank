@@ -1,6 +1,6 @@
-import sys
-from monrsa.crypto import *
-
+from monrsa.crypto import generate_keys
+import base64
+import json
 
 
 def save_rsa_keys(pub_path, private_path):
