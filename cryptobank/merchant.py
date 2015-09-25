@@ -21,10 +21,8 @@ def check_key(signed_key):
     bank_key  = Key.import_key_from_path("bank.pubkey")
     with open(signed_key, "r") as file_:
         signature = file_.read()
-        file_.close()
     with open("customer.pubkey", "r") as file_:
         customer_key = file_.read()
-        file_.close()
     print(unserialize(customer_key))
     return bank_key.verify(str(unserialize(customer_key)), signature)
 
