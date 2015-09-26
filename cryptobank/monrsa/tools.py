@@ -3,6 +3,19 @@ import base64
 import json
 
 
+def _deleteContent(pfile):
+    pfile.seek(0)
+    pfile.truncate()
+
+def generate_database(db_name):
+    """
+    Generates a blank file for the bank to use as a database
+    """
+    db   = open(db_name, "w")
+    _deleteContent(db)
+    db.close()
+
+
 def save_rsa_keys(pub_path, private_path):
     """
     Saves a pair of rsa keys

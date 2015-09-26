@@ -6,7 +6,7 @@ import sys
 import argparse
 
 from monrsa.crypto import Key
-from monrsa.tools import save_rsa_keys
+from monrsa.tools import save_rsa_keys, generate_database
 
 
 def verify(check, pubkey):
@@ -15,13 +15,6 @@ def verify(check, pubkey):
 
 
 
-def generate_database():
-    """
-    Generates a blank file for the bank to use as a database
-    """
-    db   = open("bank_db.db", "w")
-    db.write("")
-    db.close()
 
 
 def sign_key(raw_data_path):
@@ -54,7 +47,7 @@ def main():
 
     # Now do things depending of the collected arguments
     if arguments.generate_database:
-        generate_database()
+        generate_database("bank.db")
     if arguments.generate_keys:
         save_rsa_keys("bank.pubkey", "bank.key")
     if arguments.sign_key:
