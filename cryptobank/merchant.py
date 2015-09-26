@@ -10,10 +10,6 @@ def print_error(string):
     return False
 
 
-
-
-
-
 def check_key(signed_key):
 
     """

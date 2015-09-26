@@ -8,8 +8,6 @@ privatekey_1 = b'eyJtb2R1bHVzIjogMjUyMjQ3MjA2NzQ1MjA1MTY3NjQwMjY5NzgyMzczNDI5MzY
 
 
 class TestCrypto(unittest.TestCase):
-
-
     
     def test_sign_import_small_file(self):
         """
