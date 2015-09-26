@@ -4,6 +4,11 @@ echo "Generate bank database and keys"
 ./bank --generate-database
 ./bank --generate-keys  # crée bank.pubkey & bank.key
 
+
+echo "Generate merchant database"
+./merchant --generate-database
+
+
 echo "Generate customer key"
 ./customer --generate-keys # crée customer.pubkey & customer.key
 
