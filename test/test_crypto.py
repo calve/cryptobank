@@ -6,6 +6,22 @@ privatekey_1 = b'eyJtb2R1bHVzIjogMjUyMjQ3MjA2NzQ1MjA1MTY3NjQwMjY5NzgyMzczNDI5MzY
 
 
 class TestCrypto(unittest.TestCase):
+    def test_sign_import(self):
+        """
+        Test that we can sign an imported file
+        """
+        key = generate_keys()
+        random_words = "unephraseauhasard"
+        
+        with open("ex2_file_to_sign", "w") as file_:
+            file_.write(random_words) 
+        with open("ex2_file_to_sign", "r") as file_:
+            file_to_sign = file_.read()
+
+        signature = key.sign(file_to_sign)
+        self.assertFalse(key.verify(file_to_sign, signature))
+        #self.assertFalse(key.verify("plopplopplop", signature))
+        #self.asttrtFalse(key.verify(random_words, "bm90YXNpZ25hdHVyZQ=="))
 
     def test_prime(self):
         for n in [3, 5, 7, 13, 17, 31]:
@@ -42,3 +58,4 @@ class TestCrypto(unittest.TestCase):
     def test_file_import(self):
         k = Key.import_key_from_path("./test/example1.privatekey")
         self.assertEqual(k.d, 7260641110672835047827501997505943133111644574566000021223010655821235083273105396166649351538199689087470625243598930260920051965152495026558593677206110131225339468439963696250138457237146400566084663068588989184142313129218072345377097517321866479966875312693812985816283627389031218962071766399892103649986215460566584764250065985145026249061430407197849885219245804705911929101154059227132722588356478832245147574995036068957521408346894233847348879381167232592226850553762509438716835126943861635944585593943577474311423037504121629177079385831326372436253345586993761731264277329967225302363697165149604157685)
+

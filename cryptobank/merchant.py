@@ -23,8 +23,7 @@ def check_key(signed_key):
         signature = file_.read()
     with open("customer.pubkey", "r") as file_:
         customer_key = file_.read()
-    print(unserialize(customer_key))
-    return bank_key.verify(str(unserialize(customer_key)), signature)
+    print(bank_key.verify(customer_key, signature))
 
 
 def new_transaction(signed_key, amount):
@@ -34,7 +33,7 @@ def new_transaction(signed_key, amount):
     iGenerates a check for the customer to sign
     
     """
-    print(signed_key)
+    check_key(signed_key)
 '''    with open(bankfile) as file_:
         bankkey = Key.import_key(file_.readlines())
     if not bankkey.verify(signedkey):
@@ -61,7 +60,6 @@ def main():
     if arguments.new_transaction:
         if arguments.amount:
             new_transaction(arguments.new_transaction, arguments.amount)   
-            print("ok")
         else:
             print("ko")
     if arguments.transaction:
