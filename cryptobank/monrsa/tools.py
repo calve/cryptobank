@@ -15,8 +15,13 @@ def save_rsa_keys(pub_path, private_path):
     public_key.close()
     private_key.close()
 
-
-
+def import_key(path):
+    """
+    The object "Key" only deals with bytes. We therefore have to make sure that anything we import pass to the object is a byte
+    """
+    with open("ex2_key", "r") as file_:
+        key_import = file_.read()
+    return key_import.encode()
 
 def serialize(o):
     """

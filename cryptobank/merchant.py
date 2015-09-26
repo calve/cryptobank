@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
-from monrsa.crypto import Key
-from monrsa.tools import save_rsa_keys 
+from monrsa.crypto import Key, generate_keys
+from monrsa.tools import save_rsa_keys, import_key
 import argparse
 import sys
 
@@ -10,7 +10,12 @@ def print_error(string):
     return False
 
 
+
+
+
+
 def check_key(signed_key):
+
     """
     Will check that the key passed as a parameter is correct
         - loads the bank's public key
@@ -18,14 +23,13 @@ def check_key(signed_key):
         - opens the client's public key
         - checks the key again the signature
     """
+    '''
     bank_key  = Key.import_key_from_path("bank.pubkey")
-    with open(signed_key, "r") as file_:
-        signature = file_.read()
+    signature = import_key(signed_key)
     with open("customer.pubkey", "r") as file_:
-        customer_key = file_.read()
-    print(unserialize(customer_key))
-    return bank_key.verify(str(unserialize(customer_key)), signature)
-
+       customer_key = file_.read()
+    print(bank_key.verify(customer_key, signature))
+    '''
 
 def new_transaction(signed_key, amount):
     """
@@ -34,7 +38,7 @@ def new_transaction(signed_key, amount):
     iGenerates a check for the customer to sign
     
     """
-    print(signed_key)
+    check_key(signed_key)
 '''    with open(bankfile) as file_:
         bankkey = Key.import_key(file_.readlines())
     if not bankkey.verify(signedkey):
@@ -61,7 +65,6 @@ def main():
     if arguments.new_transaction:
         if arguments.amount:
             new_transaction(arguments.new_transaction, arguments.amount)   
-            print("ok")
         else:
             print("ko")
     if arguments.transaction:
