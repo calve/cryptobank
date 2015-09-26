@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
-from monrsa.crypto import Key
-from monrsa.tools import save_rsa_keys 
+from monrsa.crypto import Key, generate_keys
+from monrsa.tools import save_rsa_keys, import_key
 import argparse
 import sys
 
@@ -10,7 +10,35 @@ def print_error(string):
     return False
 
 
+def test_sign():
+    """
+    Test signature with a short word
+    """
+    key = generate_keys()
+    words = "coucoules biloutes la forme ?"
+    with open("ex2_file_to_sign", "w") as file_:
+        file_.write(words)
+    with open("ex2_file_to_sign", "r") as file_:
+        file_to_sign = file_.read()
+    signature = key.sign(file_to_sign)
+    print(key.verify(file_to_sign, signature)) 
+
+def test_sign2():
+    key = generate_keys()
+    with open("ex2_file_to_sign", "w") as file_:
+        file_.write(key.get_pub().decode())
+    with open("ex2_file_to_sign", "r") as file_:
+        file_to_sign = file_.read()
+    signature = key.sign(file_to_sign)
+    print(key.verify(file_to_sign, signature)) 
+
+
+
+
 def check_key(signed_key):
+
+    test_sign()
+    test_sign2()
     """
     Will check that the key passed as a parameter is correct
         - loads the bank's public key
@@ -18,13 +46,13 @@ def check_key(signed_key):
         - opens the client's public key
         - checks the key again the signature
     """
+    '''
     bank_key  = Key.import_key_from_path("bank.pubkey")
-    with open(signed_key, "r") as file_:
-        signature = file_.read()
+    signature = import_key(signed_key)
     with open("customer.pubkey", "r") as file_:
-        customer_key = file_.read()
+       customer_key = file_.read()
     print(bank_key.verify(customer_key, signature))
-
+    '''
 
 def new_transaction(signed_key, amount):
     """
