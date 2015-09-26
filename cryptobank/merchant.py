@@ -3,7 +3,7 @@ from monrsa.crypto import Key, generate_keys
 from monrsa.tools import save_rsa_keys, import_key
 import argparse
 import sys
-
+import random
 
 def print_error(string):
     print(string)
@@ -27,6 +27,20 @@ def check_key(signed_key):
     print(bank_key.verify(customer_key, signature))
     '''
 
+def create_check(signed_key, amount):
+    """
+    Creates a check to sign
+    """
+    random_number = random.getrandbits(128)
+    check = {
+        "amount": amount,
+        "signed_custommer_public_key": signed_key,
+        "merchant_id": "01",
+        "token": "381de8be5e622bcc0bf72d399f907e6b"
+    }
+    print(check)
+
+
 def new_transaction(signed_key, amount):
     """
     Generates a new transaction.
@@ -34,8 +48,11 @@ def new_transaction(signed_key, amount):
     iGenerates a check for the customer to sign
     
     """
-    check_key(signed_key)
-'''    with open(bankfile) as file_:
+    #check_key(signed_key)
+    create_check(signed_key, amount)
+    
+    
+    '''    with open(bankfile) as file_:
         bankkey = Key.import_key(file_.readlines())
     if not bankkey.verify(signedkey):
         print("nope, not a client")
