@@ -189,4 +189,4 @@ class Key:
         return original == _text2Int(rawdata)
 
     def __str__(self):
-        return self.get_pub()
+        return self.get_pub().decode()
