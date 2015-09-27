@@ -22,7 +22,7 @@ echo "Le client importe sa signature privé, prend le chèque(transaction.json),
 echo "Le marchant vérifie que le chèque est conforme à la transaction"
 # Écris sur la sortie standard `ok` ou `pas ok`
 # Retourne 0 si OK, 1 si KO
-./merchant --verify-transaction transaction.json --check check.json --client-pubkey client.pubkey
+./merchant --verify-transaction transaction.json check.json client.pubkey
 
 ## if last_return_code == ok
 ##
