@@ -64,10 +64,7 @@ On représentera et transmettra les chèques en JSON :
 
 ```
 {
-    "transaction" : {
-        "amount":4200,
-        ...
-    },
+    "transaction": base64,
     "signature":"cmFuZG9tY2zDqXB1YmxpcXVlc2lnbsOpCg=="
 }
 ```
