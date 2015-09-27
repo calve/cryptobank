@@ -28,13 +28,6 @@ def check_key(signed_key):
     print(bank_key.verify(customer_key, signature))
     '''
 
-def save_transaction_to_database(transaction):
-    """
-    Saves the transaction to the bank's database
-
-    """
-    with open("bank.db", "a") as file_:
-        file_.write(json.dumps(transaction) + "\n")
 
 def create_check(signature, amount):
     """
@@ -47,7 +40,6 @@ def create_check(signature, amount):
         "merchant_id": "01",
         "token": random_number
     }
-    save_transaction_to_database(check)
     print(serialize(check).decode())
 
 def new_transaction(signed_key, amount):
