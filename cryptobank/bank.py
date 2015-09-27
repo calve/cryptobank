@@ -43,6 +43,20 @@ def store_check(check):
     with open("bank.db", "a") as file_:
         file_.write(check)
 
+def verify_check_first(dic_check):
+    """
+    Checks that the ckeck the merchant is giving us has not already been cashed-in
+    """
+
+    with open("bank.db", "r") as file_:
+        f = file_.readline()
+        while f:
+            if unserialize(f) == dic_check:
+                print("This check has already been cashed in.")
+                exit(1) 
+            f = file_.readline()
+        # if we cannot find the same check
+        return True
 
 
 def deposit(arguments):
@@ -62,11 +76,17 @@ def deposit(arguments):
     # the check encoded in base64
     base64_check = signed_transaction["base64_check"]
     # the check as a string
-    str_check = unserialize(base64_check)
+    dic_check = unserialize(base64_check)
     # the customer's signature (the one used to sign the check)
-    customer_signature = str_check["signature_customer_public_key"]
+    customer_signature = dic_check["signature_customer_public_key"]
     #if the customer is part of the bank, the signature present in the check should be OK
-    store_check(base64_check)
+
+    # check that the check has not already been cashed-in
+    if verify_check_first(dic_check):
+        print("This check has been cashed in")
+        store_check(base64_check)
+    else:
+        print("This check has already been cashed-in")
     """
     TO DO : implement verification
     if bank_key.verify(customer_pubkey, customer_signature):
