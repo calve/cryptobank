@@ -11,9 +11,8 @@ def generate_database(db_name):
     """
     Generates a blank file for the bank to use as a database
     """
-    db   = open(db_name, "w")
-    _deleteContent(db)
-    db.close()
+    with open(db_name, "w") as file_:
+        file_.write("")
 
 
 def save_rsa_keys(pub_path, private_path):
