@@ -5,10 +5,6 @@ echo "Generate bank database and keys"
 ./bank --generate-keys  # crée bank.pubkey & bank.key
 
 
-echo "Generate merchant database"
-./merchant --generate-database
-
-
 echo "Generate customer key"
 ./customer --generate-keys # crée customer.pubkey & customer.key
 
@@ -26,7 +22,7 @@ echo "Le client importe sa signature privé, prend le chèque(transaction.json),
 echo "Le marchant vérifie que le chèque est conforme à la transaction"
 # Écris sur la sortie standard `ok` ou `pas ok`
 # Retourne 0 si OK, 1 si KO
-./merchant --transaction transaction.json --check check.json --client-pubkey client.pubkey
+./merchant --verify-transaction transaction.json --check check.json --client-pubkey client.pubkey
 
 ## if last_return_code == ok
 ##
