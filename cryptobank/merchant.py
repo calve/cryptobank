@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 from monrsa.crypto import Key, generate_keys
-from monrsa.tools import save_rsa_keys, import_key, unserialize
+from monrsa.tools import save_rsa_keys, import_key, unserialize, serialize
 import argparse
 import sys
 import random
@@ -101,7 +101,10 @@ def verify_transaction(arguments):
         if client_key.verify(signed_check["base64_check"], signature):
             exit(0)
         else:
-            exit(1)
+            print("The signature does not appear to have been made by the client. Could there be Charly in the middle ? Better being safe than sorry... exiting")
+    else:
+        print("the check the customer has signed is not the same as the one the merchant signed. Exiting")
+        exit(1)
 
 def main():
     # Install the argument parser. Initiate the description with the docstring
