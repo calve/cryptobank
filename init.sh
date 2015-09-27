@@ -1,31 +1,34 @@
 ## Initialisation
+echo "making a nice and clean new environement"
+rm -f *.db *.key *.pubkey
 
-echo "Generate bank database and keys"
+echo "[bank] generating db and keys"
 ./bank --generate-database
 ./bank --generate-keys  # crée bank.pubkey & bank.key
 
 
-echo "Generate customer key"
+echo "[customer] generating customer key"
 ./customer --generate-keys # crée customer.pubkey & customer.key
 
-echo "Sign customer key by the bank"
+echo "[bank] signing the customer's key"
 ./bank --sign-key customer.pubkey > customer.signedkey
 
-echo "Le marchant prépare le chèque pour le client"
-#  - il vérifie la clé signé du client
-#  - si ok, il crée un json pret-a-signer
+echo "[merchant] preparing the check for the client"
+#  - check that the key provided by the customer is accepted by the bank
+#  - if it is, it creates a check ready to be signed
 ./merchant --new-transaction customer.signedkey --amount 42 > transaction.json
 
-echo "Le client importe sa signature privé, prend le chèque(transaction.json), et appose sa signature"
+echo "[customer] signing the check (importing the private key, taking the check and signing it."
 ./customer --sign-check transaction.json > check.json
 
-echo "Le marchant vérifie que le chèque est conforme à la transaction"
-# Écris sur la sortie standard `ok` ou `pas ok`
-# Retourne 0 si OK, 1 si KO
+echo "[merchant] checking the check is ok"
+# Exit with 0 if OK, 1 if KO
 ./merchant --verify-transaction transaction.json check.json customer.pubkey
 
-## if last_return_code == ok
-##
-
-echo "La banque vérifie que le chèque est valide et l'encaisse"
-./bank --deposit check.json
+if [$? -eq 0]
+then
+    echo "[bank] checking that the check is valid (i.e : that the customer signature is ok and that the check has not already been cashed-in"
+    ./bank --deposit check.jso db and keysn
+else
+    echo "Le cheque que le client a signé n'est pas le même que celui envoyé par le marchant"
+fi
