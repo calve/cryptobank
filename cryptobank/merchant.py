@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 from monrsa.crypto import Key, generate_keys
-from monrsa.tools import save_rsa_keys, import_key, generate_database
+from monrsa.tools import save_rsa_keys, import_key, generate_database, serialize
 import argparse
 import sys
 import random
@@ -41,7 +41,6 @@ def create_check(signature, amount):
     Creates a check to sign
     """
     random_number = random.getrandbits(128)
-    print(signature)
     check = {
         "amount": amount,
         "signature_customer_public_key": signature,
@@ -49,7 +48,7 @@ def create_check(signature, amount):
         "token": random_number
     }
     save_transaction_to_database(check)
-    print(check)
+    print(serialize(check).decode())
 
 def new_transaction(signed_key, amount):
     """
