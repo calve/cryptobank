@@ -3,9 +3,6 @@ import base64
 import json
 
 
-def _deleteContent(pfile):
-    pfile.seek(0)
-    pfile.truncate()
 
 def generate_database(db_name):
     """
