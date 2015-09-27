@@ -74,14 +74,28 @@ def new_transaction(signed_key, amount):
     }
     return json
 '''
+
+def check_transaction(transaction):
+    """
+    Import le check et le transform en string
+    Transform le check de base64 en string
+    Verifie que les informations dans le cheque sont les même qu'il a envoyé
+    Si OK
+        Verifie que la signature est valide
+        Si OK : renvoie 0 sur la sortie standard
+        Sinon : renvoie 1
+    """
+    
+
 def main():
     # Install the argument parser. Initiate the description with the docstring
     argparser = argparse.ArgumentParser(description=sys.modules[__name__].__doc__)
     argparser.add_argument("--new-transaction",  # This is a binary option
                            help="Checks that the customer's key is correct and if so, creates a check ready to be signed")
     argparser.add_argument("--transaction",  # This is also a binary option
-                           action="store_true",
-                           help="Checks that the check is valid. If it is OK it returns 0, otherwise it returns 1")
+                            nargs=3,
+                            metavar=('TRANSACTION.JSON', 'SIGNED_CHECK.JSON', 'CLIENT_PUB_KEY.PUBKEY'),
+                            help="Checks that the check is valid. If it is OK it returns 0, otherwise it returns 1")
     argparser.add_argument("--amount",  # This is also a binary option
                            help="The amount of the transaction")
     argparser.add_argument("--generate-database",  # This is also a binary option
@@ -96,7 +110,7 @@ def main():
         else:
             print("ko")
     if arguments.transaction:
-        print("yoyo")
+       check_transaction(arguments.transaction) 
     if arguments.generate_database:
         generate_database("merchant.db") 
 
