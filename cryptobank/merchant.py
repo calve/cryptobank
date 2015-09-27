@@ -1,9 +1,10 @@
 #! /usr/bin/env python3
 from monrsa.crypto import Key, generate_keys
-from monrsa.tools import save_rsa_keys, import_key
+from monrsa.tools import save_rsa_keys, import_key, generate_database
 import argparse
 import sys
 import random
+import json
 
 def print_error(string):
     print(string)
@@ -27,18 +28,26 @@ def check_key(signed_key):
     print(bank_key.verify(customer_key, signature))
     '''
 
-def create_check(signed_key, amount):
+def save_transaction_to_database(transaction):
+    """
+    Saves the transaction to the bank's database
+
+    """
+    with open("bank.db", "a") as file_:
+        file_.write(json.dumps(transaction) + "\n")
+
+def create_check(signature, amount):
     """
     Creates a check to sign
     """
     random_number = random.getrandbits(128)
     check = {
         "amount": amount,
-        "signed_custommer_public_key": signed_key,
+        "signed_custommer_public_key": signature,
         "merchant_id": "01",
-        "token": "381de8be5e622bcc0bf72d399f907e6b"
+        "token": random_number
     }
-    print(check)
+    save_transaction_to_database(check)
 
 
 def new_transaction(signed_key, amount):
@@ -72,6 +81,9 @@ def main():
                            help="Checks that the check is valid. If it is OK it returns 0, otherwise it returns 1")
     argparser.add_argument("--amount",  # This is also a binary option
                            help="The amount of the transaction")
+    argparser.add_argument("--generate-database",  # This is also a binary option
+                           action="store_true",
+                           help="Checks that the check is valid. If it is OK it returns 0, otherwise it returns 1")
     arguments = argparser.parse_args()
 
     # Now do things depending of the collected arguments
@@ -82,6 +94,8 @@ def main():
             print("ko")
     if arguments.transaction:
         print("yoyo")
+    if arguments.generate_database:
+        generate_database("merchant.db") 
 
 
 # This is a Python's special:
