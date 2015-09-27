@@ -1,6 +1,6 @@
 ## Initialisation
 echo "making a nice and clean new environement"
-rm -f *.db *.key *.pubkey
+rm -f *.db *.key *.pubkey *.json
 
 echo "[bank] generating db and keys"
 ./bank --generate-database
