@@ -21,7 +21,7 @@ echo "Le marchant prépare le chèque pour le client"
 ./merchant --new-transaction customer.signedkey --amount 42 > transaction.json
 
 echo "Le client importe sa signature privé, prend le chèque(transaction.json), et appose sa signature"
-./customer --private-key customer.key transaction.json > check.json
+./customer --sign-check transaction.json > check.json
 
 echo "Le marchant vérifie que le chèque est conforme à la transaction"
 # Écris sur la sortie standard `ok` ou `pas ok`
