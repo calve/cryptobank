@@ -57,9 +57,12 @@ def new_transaction(signed_key, amount):
     iGenerates a check for the customer to sign
     
     """
-    #check_key(signed_key)
-    create_check(signed_key, amount)
     
+    # we import the signature
+    with open(signed_key, "r") as file_:
+        signature = file_.read()
+    #check_key(signed_key)
+    create_check(signature, amount)
     
     '''    with open(bankfile) as file_:
         bankkey = Key.import_key(file_.readlines())
