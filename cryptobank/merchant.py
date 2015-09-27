@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 from monrsa.crypto import Key, generate_keys
-from monrsa.tools import save_rsa_keys, import_key, serialize
+from monrsa.tools import save_rsa_keys, import_key, unserialize
 import argparse
 import sys
 import random
@@ -75,17 +75,33 @@ def new_transaction(signed_key, amount):
     return json
 '''
 
-def check_transaction(transaction):
+
+
+def verify_transaction(arguments):
     """
-    Import le check et le transform en string
-    Transform le check de base64 en string
+    Import le check et le transform en dic
+    Import la transaction d'origine et la transforme en dic
     Verifie que les informations dans le cheque sont les même qu'il a envoyé
     Si OK
         Verifie que la signature est valide
         Si OK : renvoie 0 sur la sortie standard
         Sinon : renvoie 1
     """
+    with open(arguments[0]) as file_:
+        original_transaction = unserialize(file_.readline())
+    with open(arguments[1]) as file_:
+        signed_check = unserialize(file_.readline())
     
+    #this is the check that the customer has signed
+    signed_transaction = unserialize(signed_check["base64_check"])
+    signature = signed_check["signature"]     
+    client_key = Key.import_key_from_path(arguments[2]) 
+    # if the two checks match, we just have to check that the signature is ok.
+    if signed_transaction == original_transaction:
+        if client_key.verify(signed_check["base64_check"], signature):
+            exit(0)
+        else:
+            exit(1)
 
 def main():
     # Install the argument parser. Initiate the description with the docstring
@@ -109,8 +125,8 @@ def main():
             new_transaction(arguments.new_transaction, arguments.amount)   
         else:
             print("ko")
-    if arguments.transaction:
-       check_transaction(arguments.transaction) 
+    if arguments.verify_transaction:
+       verify_transaction(arguments.verify_transaction) 
 
 
 # This is a Python's special:
