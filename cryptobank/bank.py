@@ -39,6 +39,12 @@ def sign_key(raw_data_path):
         - 
     """
 
+def store_check(check):
+    with open("bank.db", "a") as file_:
+        file_.write(check)
+
+
+
 def deposit(arguments):
     """
     Verify that the check has been signed by an authorised person
@@ -60,13 +66,17 @@ def deposit(arguments):
     # the customer's signature (the one used to sign the check)
     customer_signature = str_check["signature_customer_public_key"]
     #if the customer is part of the bank, the signature present in the check should be OK
+    store_check(base64_check)
+    """
+    TO DO : implement verification
     if bank_key.verify(customer_pubkey, customer_signature):
+         
         print("signature ok")
     else:
         print("signature ko")
     #if the check has indeed been signed by a bank's customer
     #if customer_key.check(base64_check, signature):
-
+    """
 
 def main():
     # Install the argument parser. Initiate the description with the docstring
