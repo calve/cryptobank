@@ -41,6 +41,7 @@ def create_check(signature, amount):
     Creates a check to sign
     """
     random_number = random.getrandbits(128)
+    print(signature)
     check = {
         "amount": amount,
         "signature_customer_public_key": signature,
@@ -60,7 +61,7 @@ def new_transaction(signed_key, amount):
     
     # we import the signature
     with open(signed_key, "r") as file_:
-        signature = file_.read()
+        signature = file_.readline().strip()
     #check_key(signed_key)
     create_check(signature, amount)
     
