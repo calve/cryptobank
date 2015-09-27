@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 from monrsa.crypto import Key, generate_keys
-from monrsa.tools import save_rsa_keys, import_key, generate_database, serialize
+from monrsa.tools import save_rsa_keys, import_key, serialize
 import argparse
 import sys
 import random
@@ -92,7 +92,7 @@ def main():
     argparser = argparse.ArgumentParser(description=sys.modules[__name__].__doc__)
     argparser.add_argument("--new-transaction",  # This is a binary option
                            help="Checks that the customer's key is correct and if so, creates a check ready to be signed")
-    argparser.add_argument("--transaction",  # This is also a binary option
+    argparser.add_argument("--verify-transaction",  # This is also a binary option
                             nargs=3,
                             metavar=('TRANSACTION.JSON', 'SIGNED_CHECK.JSON', 'CLIENT_PUB_KEY.PUBKEY'),
                             help="Checks that the check is valid. If it is OK it returns 0, otherwise it returns 1")
@@ -111,8 +111,6 @@ def main():
             print("ko")
     if arguments.transaction:
        check_transaction(arguments.transaction) 
-    if arguments.generate_database:
-        generate_database("merchant.db") 
 
 
 # This is a Python's special:
