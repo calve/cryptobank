@@ -6,7 +6,7 @@ import sys
 import argparse
 
 from monrsa.crypto import Key
-from monrsa.tools import save_rsa_keys, generate_database
+from monrsa.tools import save_rsa_keys, generate_database, unserialize
 
 
 def verify(check, pubkey):
@@ -32,6 +32,42 @@ def sign_key(raw_data_path):
     return bank_key.sign(data)
 
 
+#def check_customer_exists(pubkey, signature)
+    """
+    We want to make sure two things :
+        - Check that the signature used to do the transaction is valid
+        - 
+    """
+
+def deposit(arguments):
+    """
+    Verify that the check has been signed by an authorised person
+    Verify that the check has not been already cashed
+    Store the check in the db
+    """
+    with open(arguments[0], "r") as file_:
+        signed_transaction = unserialize(file_.readline())
+    with open(arguments[1], "r") as file_:
+        customer_pubkey = file_.readline()
+    
+    bank_key = Key.import_key_from_path("bank.key")
+    # the signature of the check
+    check_signature = signed_transaction["signature"]
+    # the check encoded in base64
+    base64_check = signed_transaction["base64_check"]
+    # the check as a string
+    str_check = unserialize(base64_check)
+    # the customer's signature (the one used to sign the check)
+    customer_signature = str_check["signature_customer_public_key"]
+    #if the customer is part of the bank, the signature present in the check should be OK
+    if bank_key.verify(customer_pubkey, customer_signature):
+        print("signature ok")
+    else:
+        print("signature ko")
+    #if the check has indeed been signed by a bank's customer
+    #if customer_key.check(base64_check, signature):
+
+
 def main():
     # Install the argument parser. Initiate the description with the docstring
     argparser = argparse.ArgumentParser(description=sys.modules[__name__].__doc__)
@@ -41,8 +77,12 @@ def main():
     argparser.add_argument("--generate-keys",  # This is also a binary option
                            action="store_true",
                            help="Generate the keys")
-    argparser.add_argument("--sign-key",  # This is a option which need one extra argument
-                           help="Sign the specified key")
+    argparser.add_argument("--sign-key",  # this is a option which need one extra argument
+                           help="sign the specified key")
+    argparser.add_argument("--deposit",  # this is a option which need one extra argument
+                            nargs=2,
+                            metavar=("SIGNED_CHECK.JSON", "CUSTOMER.PUBKEY"),
+                           help="deposit a check")
     arguments = argparser.parse_args()
 
     # Now do things depending of the collected arguments
@@ -52,7 +92,8 @@ def main():
         save_rsa_keys("bank.pubkey", "bank.key")
     if arguments.sign_key:
         print(sign_key(arguments.sign_key).decode())
-
+    if arguments.deposit:
+        deposit(arguments.deposit)
 
 # This is a Python's special:
 # The only way to tell wether we are running the program as a binary,
