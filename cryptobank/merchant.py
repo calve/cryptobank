@@ -43,12 +43,12 @@ def create_check(signature, amount):
     random_number = random.getrandbits(128)
     check = {
         "amount": amount,
-        "signed_customer_public_key": signature,
+        "signature_customer_public_key": signature,
         "merchant_id": "01",
         "token": random_number
     }
     save_transaction_to_database(check)
-
+    print(check)
 
 def new_transaction(signed_key, amount):
     """
