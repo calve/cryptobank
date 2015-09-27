@@ -43,7 +43,7 @@ def create_check(signature, amount):
     random_number = random.getrandbits(128)
     check = {
         "amount": amount,
-        "signed_custommer_public_key": signature,
+        "signed_customer_public_key": signature,
         "merchant_id": "01",
         "token": random_number
     }
