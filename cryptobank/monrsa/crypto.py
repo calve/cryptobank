@@ -5,6 +5,8 @@ from math import sqrt
 import base64
 import json
 import random
+import hashlib
+from binascii import Error as binasciiError
 
 _prime_trials = 2
 
@@ -117,6 +119,10 @@ def _unserialize(s):
     return json.loads(base64.b64decode(s).decode())
 
 
+def _hash_function(rawdata):
+    return hashlib.sha1(rawdata).hexdigest()
+
+
 def generate_keys(n=2048):
     p = _get_prime(n//2)
     q = _get_prime(n//2)
@@ -176,17 +182,25 @@ class Key:
         return cls.import_key(body)
 
     def sign(self, rawdata):
-        raw = _text2Int(rawdata)
+        # Compute a fixed-length hash, so we don't have to deal with padding
+        digest = _hash_function(rawdata.encode())
+        raw = _text2Int(digest)
         m = raw % self.n
         sign = pow(m, self.d, self.n)
         representable = base64.b64encode(_int2Text(sign).encode())
         return representable
 
     def verify(self, rawdata, signature):
-        binary_sign = base64.b64decode(signature)
+        try:
+            binary_sign = base64.b64decode(signature)
+        except binasciiError:
+            return False
         c = _text2Int(binary_sign.decode())
         original = pow(c, self.e, self.n)
-        return original == _text2Int(rawdata)
+        digest = _hash_function(rawdata.encode())
+        signed = _int2Text(original)
+        # Compare the content of the signed string to the original hash
+        return signed == digest
 
     def __str__(self):
         return self.get_pub().decode()
