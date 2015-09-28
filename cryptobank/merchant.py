@@ -20,13 +20,14 @@ def check_key(signed_key):
         - opens the client's public key
         - checks the key again the signature
     """
-    '''
     bank_key  = Key.import_key_from_path("bank.pubkey")
     signature = import_key(signed_key)
     with open("customer.pubkey", "r") as file_:
        customer_key = file_.read()
-    print(bank_key.verify(customer_key, signature))
-    '''
+    if bank_key.verify(customer_key, signature):
+        return True
+    else:
+        return False
 
 
 def create_check(signature, amount):
@@ -46,26 +47,19 @@ def new_transaction(signed_key, amount):
     """
     Generates a new transaction.
     Checks that the customer's key is valid
-    iGenerates a check for the customer to sign
+    Generates a check for the customer to sign
     
     """
     
     # we import the signature
+    # TO DO : check if we need to strip the hard return
     with open(signed_key, "r") as file_:
         signature = file_.readline().strip()
-    #check_key(signed_key)
-    create_check(signature, amount)
-    
-    '''    with open(bankfile) as file_:
-        bankkey = Key.import_key(file_.readlines())
-    if not bankkey.verify(signedkey):
-        print("nope, not a client")
-        return
-    json = {
-        "amount" : amount
-    }
-    return json
-'''
+    if check_key(signed_key):
+        create_check(signature, amount)
+    else:
+        print("The client has not got an account with the bank")
+        exit(1)
 
 
 
@@ -85,6 +79,8 @@ def verify_transaction(arguments):
         signed_check = unserialize(file_.readline())
     
     #this is the check that the customer has signed
+    print(original_transaction)
+    print(signed_check)
     signed_transaction = unserialize(signed_check["base64_check"])
     signature = signed_check["signature"]     
     client_key = Key.import_key_from_path(arguments[2]) 
