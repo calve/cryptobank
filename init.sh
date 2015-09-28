@@ -25,7 +25,7 @@ echo "[merchant] checking the check is ok"
 # Exit with 0 if OK, 1 if KO
 ./merchant --verify-transaction transaction.json check.json customer.pubkey
 
-if [$? -eq 0]
+if [ $? -eq 0 ]
 then
     echo "[bank] checking that the check is valid (i.e : that the customer signature is ok and that the check has not already been cashed-in"
     ./bank --deposit check.json customer.pubkey
