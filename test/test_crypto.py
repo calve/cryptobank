@@ -25,13 +25,13 @@ class TestCrypto(unittest.TestCase):
         Test that we can sign and verify a small string
         """
         key = self.keys
-        for i in range(1, 2048):
-            random_word = randomword(i)
+        for i in range(1, 11):
+            random_word = randomword(2 ** i)
             signature = key.sign(random_word)
             try:
                 self.assertTrue(key.verify(random_word, signature))
             except AssertionError:
-                print("Failed to sign string of length {}".format(i))
+                print("Failed to sign string of length {}".format(2 ** i))
                 raise
 
     def test_sign_public_key(self):
@@ -54,17 +54,11 @@ class TestCrypto(unittest.TestCase):
 
     def test_signature(self):
         key = self.keys
-        random_words = "unephraseauhasard"
+        random_words = randomword(255)
         signature = key.sign(random_words)
-        print(key)
-        print(signature)
         self.assertTrue(key.verify(random_words, signature))
-        self.assertFalse(key.verify("plopplopplop", signature))
-        self.assertFalse(key.verify(random_words, "bm90YXNpZ25hdHVyZQ=="))
-
-    def test_randomize(self):
-        word = randomword(16)
-        self.assertNotEqual(self.keys.sign(word), self.keys.sign(word))
+        self.assertFalse(key.verify(randomword(255), signature))
+        self.assertFalse(key.verify(random_words, randomword(255)))
 
     # def test_key_gen(self):
     #     key1 = self.keys
