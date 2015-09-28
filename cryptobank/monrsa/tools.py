@@ -28,7 +28,7 @@ def import_key(path):
     """
     The object "Key" only deals with bytes. We therefore have to make sure that anything we import pass to the object is a byte
     """
-    with open("ex2_key", "r") as file_:
+    with open(path, "r") as file_:
         key_import = file_.read()
     return key_import.encode()
 
