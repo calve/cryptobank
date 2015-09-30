@@ -5,8 +5,8 @@ A program emuling a cryptographic bank.
 import sys
 import argparse
 
-from monrsa.crypto import Key
-from monrsa.tools import save_rsa_keys, generate_database, unserialize
+from cryptobank.monrsa.crypto import Key
+from cryptobank.monrsa.tools import save_rsa_keys, generate_database, unserialize
 
 
 def verify(check, pubkey):

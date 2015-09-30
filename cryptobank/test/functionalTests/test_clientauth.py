@@ -1,7 +1,7 @@
-
 import unittest
 import string
 import random
+import cryptobank.merchant
 from cryptobank.monrsa.crypto import generate_keys, Key, _is_prime, _get_prime
 
 

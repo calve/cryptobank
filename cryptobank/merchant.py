@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
-from monrsa.crypto import Key, generate_keys
-from monrsa.tools import save_rsa_keys, import_key, unserialize, serialize
+from cryptobank.monrsa.crypto import Key, generate_keys
+from cryptobank.monrsa.tools import save_rsa_keys, import_key, unserialize, serialize
 import argparse
 import sys
 import random

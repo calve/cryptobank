@@ -1,7 +1,6 @@
-from monrsa.crypto import generate_keys
+from cryptobank.monrsa.crypto import generate_keys
 import base64
 import json
-
 
 
 def generate_database(db_name):
