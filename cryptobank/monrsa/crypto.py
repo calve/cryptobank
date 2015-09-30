@@ -28,7 +28,7 @@ def _get_prime(n):
     Returns a random prime number of size n bits
     """
     r = 1
-    while not _is_prime(r):
+    while not _is_prime(r) and r < (2 ** n):
         print(".", end="", flush=True)
         r = random.getrandbits(n) | (2**(n-1))
     print("+")
