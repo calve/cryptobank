@@ -60,12 +60,12 @@ class TestCrypto(unittest.TestCase):
         self.assertFalse(key.verify(randomword(255), signature))
         self.assertFalse(key.verify(random_words, randomword(255)))
 
-    # def test_key_gen(self):
-    #     key1 = self.keys
-    #     key2 = generate_keys()
-    #     self.assertNotEqual(key1.e, key1.d)
-    #     self.assertNotEqual(key1.e, key2.e)
-    #     self.assertNotEqual(key1.d, key2.d)
+    def test_key_gen(self):
+        key1 = self.keys
+        key2 = generate_keys()
+        self.assertNotEqual(key1.e, key1.d)
+        self.assertNotEqual(key1.e, key2.e)
+        self.assertNotEqual(key1.d, key2.d)
 
     def test_import(self):
         k = Key.import_key(pubkey_1)
