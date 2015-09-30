@@ -2,30 +2,25 @@ import unittest
 import string
 import random
 import cryptobank.merchant
-from cryptobank.monrsa.crypto import generate_keys, Key, _is_prime, _get_prime
+from cryptobank.monrsa.crypto import Key
+from cryptobank.monrsa.tools import import_key
+
+
+
 
 
 class TestCrypto(unittest.TestCase):
-    @classmethod
-    def setUpClass(self):
-        """
-        Runned once
-        """
-        self.keys = generate_keys()
 
 
 
     def test_sign_small_string(self):
         """
-        Test that we can sign and verify a small string
+        Test that we only accept a client with a signature from the bank
         """
-        key = self.keys
-        for i in range(1, 11):
-            random_word = randomword(2 ** i)
-            signature = key.sign(random_word)
-            try:
-                self.assertTrue(key.verify(random_word, signature))
-            except AssertionError:
-                print("Failed to sign string of length {}".format(2 ** i))
-                raise
+        bankKey = Key.import_key_from_path("bank.key")
+        
+        signature = import_key("customer.signedkey")
+        with open("customer.pubkey", "r") as file_:
+            customer_key = file_.read()
+        self.assertTrue(bankKey.verify(customer_key, signature))
 
