@@ -14,7 +14,7 @@ class TestCrypto(unittest.TestCase):
         """
         Runned once
         """
-        self.keys = generate_keys()
+        self.keys = Key.import_key(privatekey_1)
 
     def test_sign_small_string(self):
         """
