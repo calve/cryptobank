@@ -1,1 +1,4 @@
-cryptobank/merchant.py
+#! /usr/bin/env python3
+from cryptobank.merchant import main
+
+main()

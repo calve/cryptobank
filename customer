@@ -1,1 +1,4 @@
-cryptobank/customer.py
+#! /usr/bin/env python3
+from cryptobank.customer import main
+
+main()
