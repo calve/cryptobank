@@ -7,6 +7,7 @@ import json
 import random
 import hashlib
 from binascii import Error as binasciiError
+from cryptobank.monrsa.blocks import split, assemble
 
 _prime_trials = 2
 
@@ -132,7 +133,6 @@ def generate_keys(n=2048):
     d = _invmod(e, phi)
     return Key(n, d, e)
 
-
 class Key:
     def __init__(self, n, e, d=None):
         self.n = n
@@ -183,11 +183,14 @@ class Key:
 
     def sign(self, rawdata):
         # Compute a fixed-length hash, so we don't have to deal with padding
-        digest = _hash_function(rawdata.encode())
-        raw = _text2Int(digest)
-        m = raw % self.n
-        sign = pow(m, self.d, self.n)
-        representable = base64.b64encode(_int2Text(sign).encode())
+        blocks = split(rawdata.encode(), 256)
+        result = []
+        for b in blocks:
+            raw = _text2Int(b.decode())
+            m = raw % self.n
+            sign = pow(m, self.d, self.n)
+            result.append(_int2Text(sign).encode())
+        representable = base64.b64encode(b"".join(result))
         return representable
 
     def verify(self, rawdata, signature):
