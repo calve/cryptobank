@@ -61,6 +61,18 @@ def _invmod(a, m):
         return x % m
 
 
+def _try_composite(a, d, n, s):
+    """
+    Test the base a to see whether it is a witness for the compositeness of n
+    """
+    if pow(a, d, n) == 1:
+        return False
+    for i in range(s):
+        if pow(a, 2**i * d, n) == n-1:
+            return False
+    return True  # n is definitely composite
+
+
 def _is_prime(n):
     """
     Returns whether a number is a prime number
@@ -85,18 +97,9 @@ def _is_prime(n):
         d = quotient
     assert(2**s * d == n-1)
 
-    # test the base a to see whether it is a witness for the compositeness of n
-    def try_composite(a):
-        if pow(a, d, n) == 1:
-            return False
-        for i in range(s):
-            if pow(a, 2**i * d, n) == n-1:
-                return False
-        return True  # n is definitely composite
-
     for i in range(_prime_trials):
         a = random.randrange(2, n)
-        if try_composite(a):
+        if _try_composite(a, d, n, s):
             return False
 
     return True  # no base tested showed n as composite
@@ -132,6 +135,7 @@ def generate_keys(n=2048):
     e = _get_e(phi)
     d = _invmod(e, phi)
     return Key(n, d, e)
+
 
 class Key:
     def __init__(self, n, e, d=None):
