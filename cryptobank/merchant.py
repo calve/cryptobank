@@ -79,8 +79,6 @@ def verify_transaction(arguments):
         signed_check = unserialize(file_.readline())
     
     #this is the check that the customer has signed
-    print(original_transaction)
-    print(signed_check)
     signed_transaction = unserialize(signed_check["base64_check"])
     signature = signed_check["signature"]     
     client_key = Key.import_key_from_path(arguments[2]) 
