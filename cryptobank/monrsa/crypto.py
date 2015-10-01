@@ -7,20 +7,22 @@ import json
 import random
 import hashlib
 from binascii import Error as binasciiError
+from cryptobank.monrsa.blocks import split, assemble
+
 
 _prime_trials = 2
+BLOCK_SIZE = 256
 
 
 def _text2Int(text):
-    """Convert a text string into an integer"""
+    """Convert a string into an integer"""
     return reduce(lambda x, y: (x << 8) + y, map(ord, text))
 
 
-def _int2Text(number, size=512):
-    """Convert an integer into a text string"""
-    text = "".join([chr((number >> j) & 0xff)
-                    for j in reversed(range(0, size << 3, 8))])
-    return text.lstrip("\x00")
+def _int2Bytes(number, size=512):
+    """Convert an integer into a bytes list"""
+    text = bytes([((number >> j) & 0xff) for j in reversed(range(0, size << 3, 8))])
+    return text.lstrip(b"\x00")
 
 
 def _get_prime(n):
@@ -60,6 +62,18 @@ def _invmod(a, m):
         return x % m
 
 
+def _try_composite(a, d, n, s):
+    """
+    Test the base a to see whether it is a witness for the compositeness of n
+    """
+    if pow(a, d, n) == 1:
+        return False
+    for i in range(s):
+        if pow(a, 2**i * d, n) == n-1:
+            return False
+    return True  # n is definitely composite
+
+
 def _is_prime(n):
     """
     Returns whether a number is a prime number
@@ -84,18 +98,9 @@ def _is_prime(n):
         d = quotient
     assert(2**s * d == n-1)
 
-    # test the base a to see whether it is a witness for the compositeness of n
-    def try_composite(a):
-        if pow(a, d, n) == 1:
-            return False
-        for i in range(s):
-            if pow(a, 2**i * d, n) == n-1:
-                return False
-        return True  # n is definitely composite
-
     for i in range(_prime_trials):
         a = random.randrange(2, n)
-        if try_composite(a):
+        if _try_composite(a, d, n, s):
             return False
 
     return True  # no base tested showed n as composite
@@ -183,11 +188,15 @@ class Key:
 
     def sign(self, rawdata):
         # Compute a fixed-length hash, so we don't have to deal with padding
-        digest = _hash_function(rawdata.encode())
-        raw = _text2Int(digest)
-        m = raw % self.n
-        sign = pow(m, self.d, self.n)
-        representable = base64.b64encode(_int2Text(sign).encode())
+        blocks = split(rawdata.encode(), BLOCK_SIZE)
+        result = []
+        for b in blocks:
+            raw = int.from_bytes(b, 'big')
+            sign = pow(raw, self.d, self.n)
+            signature_chunk = _int2Bytes(sign)
+            result.append(signature_chunk)
+
+        representable = base64.b64encode(b"".join(result))
         return representable
 
     def verify(self, rawdata, signature):
@@ -195,12 +204,18 @@ class Key:
             binary_sign = base64.b64decode(signature)
         except binasciiError:
             return False
-        c = _text2Int(binary_sign.decode())
-        original = pow(c, self.e, self.n)
-        digest = _hash_function(rawdata.encode())
-        signed = _int2Text(original)
-        # Compare the content of the signed string to the original hash
-        return signed == digest
+        blocks = split(rawdata.encode(), BLOCK_SIZE)
+        signature_blocks = split(binary_sign, 256)
+        verified_block = []
+        for raw_block, sign_block in zip(blocks, signature_blocks):
+            c = int.from_bytes(sign_block, 'big')
+            original = pow(c, self.e, self.n)
+            signed = _int2Bytes(original)
+            verified_block.append(signed)
+
+        assembled = assemble(verified_block)
+
+        return assembled == bytes(rawdata.encode())
 
     def __str__(self):
         return self.get_pub().decode()
