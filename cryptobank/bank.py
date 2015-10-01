@@ -43,11 +43,24 @@ def store_check(check):
     with open("bank.db", "a") as file_:
         file_.write(check)
 
+
+def verify_signature_check(customer_pub_key, signature, raw_data):
+    """
+    Verify that a check has not been altered by the merchant
+    """
+    #return True 
+    if customer_pub_key.verify(raw_data, signature):
+        return True
+    else:
+        print("This check has been altered and cannot be accepted")
+        return False
+
+
+
 def verify_check_first(dic_check):
     """
-    Checks that the ckeck the merchant is giving us has not already been cashed-in
+    Checks that the check has not been altered
     """
-
     with open("bank.db", "r") as file_:
         f = file_.readline()
         while f:
@@ -57,46 +70,42 @@ def verify_check_first(dic_check):
             f = file_.readline()
         # if we cannot find the same check
         return True
-
+    
 
 def deposit(arguments):
     """
     Verify that the check has been signed by an authorised person
+    Verify that the content of the check has not been altered
     Verify that the check has not been already cashed
     Store the check in the db
     """
     with open(arguments[0], "r") as file_:
-        signed_transaction = unserialize(file_.readline())
-    with open(arguments[1], "r") as file_:
-        customer_pubkey = file_.readline()
+        signed_check = unserialize(file_.readline())
     
-    bank_key = Key.import_key_from_path("bank.key")
+    client_key = Key.import_key_from_path(arguments[1])    
+    bank_key = Key.import_key_from_path(arguments[2])
     # the signature of the check
-    check_signature = signed_transaction["signature"]
+    check_signature = signed_check["signature"]
     # the check encoded in base64
-    base64_check = signed_transaction["base64_check"]
+    base64_check = signed_check["base64_check"]
     # the check as a string
     dic_check = unserialize(base64_check)
     # the customer's signature (the one used to sign the check)
     customer_signature = dic_check["signature_customer_public_key"]
     #if the customer is part of the bank, the signature present in the check should be OK
+    # check that the check has not already been cashed-in/altered in some way
+    if verify_signature_check(client_key, check_signature, base64_check):
 
-    # check that the check has not already been cashed-in
-    if verify_check_first(dic_check):
-        print("This check has been cashed in")
-        store_check(base64_check)
+        if verify_check_first(dic_check):
+            print("This check has been cashed in")
+            store_check(base64_check)
+            exit(0)
+        else:
+            print("This check has already been cashed-in")
+            exit(1)
     else:
-        print("This check has already been cashed-in")
-    """
-    TO DO : implement verification
-    if bank_key.verify(customer_pubkey, customer_signature):
-         
-        print("signature ok")
-    else:
-        print("signature ko")
-    #if the check has indeed been signed by a bank's customer
-    #if customer_key.check(base64_check, signature):
-    """
+        print("This check has been altered and connot be cashed in")
+        exit(1)
 
 def main():
     # Install the argument parser. Initiate the description with the docstring
@@ -110,8 +119,8 @@ def main():
     argparser.add_argument("--sign-key",  # this is a option which need one extra argument
                            help="sign the specified key")
     argparser.add_argument("--deposit",  # this is a option which need one extra argument
-                            nargs=2,
-                            metavar=("SIGNED_CHECK.JSON", "CUSTOMER.PUBKEY"),
+                            nargs=3,
+                            metavar=("SIGNED_CHECK.JSON", "CUSTOMER.PUBKEY", "BANK.KEY"),
                            help="deposit a check")
     arguments = argparser.parse_args()
 

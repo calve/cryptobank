@@ -28,7 +28,7 @@ echo "[merchant] checking the check is ok"
 if [ $? -eq 0 ]
 then
     echo "[bank] checking that the check is valid (i.e : that the customer signature is ok and that the check has not already been cashed-in"
-    ./bank --deposit check.json customer.pubkey
+    ./bank --deposit check.json customer.pubkey bank.key
 else
     echo "There was a problem with this check"
 fi
