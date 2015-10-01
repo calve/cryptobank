@@ -1,13 +1,9 @@
 import unittest
-import string
-import random
-import cryptobank.merchant
-from cryptobank.monrsa.crypto import Key
+from cryptobank.merchant import *
 from cryptobank.monrsa.tools import import_key
 
 
 
-path = "./cryptobank/test/functionalTests/keys/"
 
 class TestCrypto(unittest.TestCase):
     """
@@ -18,14 +14,48 @@ class TestCrypto(unittest.TestCase):
 
     def test_customer_change_check(self):
         """
-        Test that a bank cannot 
+        Test that a signed check is correctly recognised
+        Test that a 
         """
-        arguments = ["transaction.json", "check.json", "customer.pubkey"]
+        path = "./cryptobank/test/functionalTests/keys/"
+        arguments1 = [path + "transaction.json", path + "check.json", path + "customer.pubkey"]
+        arguments2 = [path + "transaction2.json", path + "check2.json", path + "customer.pubkey"]
+        arguments3 = [path + "transaction2.json", path + "check.json", path + "customer.pubkey"]
+        arguments4 = [path + "transaction.json", path + "check2.json", path + "customer.pubkey"]
+       
+        """ 
+        we check that the check 1 correctly recognised with trasaction 1 
+        """
+        with self.assertRaises(SystemExit) as cm:
+            verify_transaction(arguments1)
+        the_exception = cm.exception
+        self.assertEqual(the_exception.code, 0)
         
-        bankKey = Key.import_key_from_path(path + "bank.key")
-        
+        """ 
+        we check that the check 2 correctly recognised with trasaction 2 
+        """
+        with self.assertRaises(SystemExit) as cm:
+            verify_transaction(arguments2)
+        the_exception = cm.exception
+        self.assertEqual(the_exception.code, 0)
 
-        self.assertTrue(bankKey.verify(customer_key, signature))
-        self.assertFalse(bankKey.verify(customer_key, signature_false))
-        self.assertFalse(bankKeyFalse.verify(customer_key, signature))
+        
+        """ 
+        we check that the check 1 is NOT recognised with trasaction 2 
+        """
+        with self.assertRaises(SystemExit) as cm:
+            verify_transaction(arguments3)
+        the_exception = cm.exception
+        self.assertEqual(the_exception.code, 1)
+        
+        """ 
+        we check that the check 2 is NOT recognised with trasaction 1 
+        """
+        with self.assertRaises(SystemExit) as cm:
+            verify_transaction(arguments4)
+        the_exception = cm.exception
+        self.assertEqual(the_exception.code, 1)
+        #self.assertTrue(bankKey.verify(customer_key, signature))
+        #self.assertFalse(bankKey.verify(customer_key, signature_false))
+        #self.assertFalse(bankKeyFalse.verify(customer_key, signature))
         
