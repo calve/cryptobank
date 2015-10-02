@@ -57,11 +57,11 @@ def verify_signature_check(customer_pub_key, signature, raw_data):
 
 
 
-def verify_check_first(dic_check):
+def verify_check_first(dic_check, bank_db="bank.db"):
     """
     Checks that the check has not been altered
     """
-    with open("bank.db", "r") as file_:
+    with open(bank_db, "r") as file_:
         f = file_.readline()
         while f:
             if unserialize(f) == dic_check:
