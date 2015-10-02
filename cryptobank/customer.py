@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 from cryptobank.monrsa.crypto import Key
-from cryptobank.monrsa.tools import save_rsa_keys, serialize
+from cryptobank.monrsa.tools import save_rsa_keys, serialize, unserialize
 import sys
 import argparse
 import json
@@ -36,6 +36,20 @@ def sign_check(arguments):
     print(serialize(signed_check).decode())
 
 
+def forge_check(arguments):
+    check = import_check(arguments[0])
+    privatekey = Key.import_key_from_path("customer.key")
+    dic_check = unserialize(check)
+    dic_check["token"] = arguments[1]
+    check = serialize(dic_check).decode()
+    privatekey = Key.import_key_from_path("customer.key")
+    signature = privatekey.sign(check).decode()
+    signed_check = {
+        "base64_check": check,
+        "signature": signature
+    }
+    print(serialize(signed_check).decode())
+
 
 def main():
     # Install the argument parser. Initiate the description with the docstring
@@ -46,6 +60,9 @@ def main():
     argparser.add_argument("--sign-check",  # This is also a binary option
                            metavar=('CHECK-TO-SIGN'),
                            help="Takes a the customer's signature and a check and sign it.")
+    argparser.add_argument("--forge-check",  # This is also a binary option
+                           metavar=('CHECK-TO-SIGN', "TOKEN"),
+                           help="Takes a the customer's signature and a check and sign it.")
     arguments = argparser.parse_args()
 
     # Now do things depending of the collected arguments
@@ -53,6 +70,8 @@ def main():
         save_rsa_keys("customer.pubkey", "customer.key")
     if arguments.sign_check:
         sign_check(arguments.sign_check)
+    if arguments.forge_check:
+        forge_check(arguments.forge_check)
 
 # This is a Python's special:
 # The only way to tell wether we are running the program as a binary,
