@@ -63,9 +63,10 @@ On représentera et transmettra les chèques en JSON :
 ### Chèque signé :
 
 ```
+signature = #[nb_digit_de_amount]#amounttoken
 {
     "transaction": base64,
-    "signature":"cmFuZG9tY2zDqXB1YmxpcXVlc2lnbsOpCg=="
+    "signature":"jajiaji24545gji_uuiyèyaavnvb"
 }
 ```
 
