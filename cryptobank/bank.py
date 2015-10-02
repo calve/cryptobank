@@ -64,9 +64,13 @@ def verify_check_first(dic_check, bank_db="bank.db"):
     with open(bank_db, "r") as file_:
         f = file_.readline()
         while f:
-            if unserialize(f) == dic_check:
+            f_u = unserialize(f)
+            if f_u == dic_check:
                 print("This check has already been cashed in.")
-                exit(1) 
+                exit(1)
+            if f_u["token"] == dic_check["token"] and f_u["merchant_id"] == dic_check["merchant_id"]:
+                print("the token has already been used... something fishy is going on, we cannot accept this check")
+                exit(1)
             f = file_.readline()
         # if we cannot find the same check
         return True
