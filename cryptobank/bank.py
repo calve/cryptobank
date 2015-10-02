@@ -39,8 +39,8 @@ def sign_key(raw_data_path):
         - 
     """
 
-def store_check(check):
-    with open("bank.db", "a") as file_:
+def store_check(check, bank_db="bank.db"):
+    with open(bank_db, "a") as file_:
         file_.write(check)
 
 
