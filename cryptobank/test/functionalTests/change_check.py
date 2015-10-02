@@ -1,7 +1,7 @@
 import unittest
 from cryptobank.merchant import verify_transaction
 from cryptobank.bank import verify_signature_check
-from cryptobank.monrsa.tools import import_key, unserialize
+from cryptobank.monrsa.tools import import_key, unserialize, serialize
 from cryptobank.monrsa.crypto import Key
 
 
@@ -75,5 +75,8 @@ class TestCrypto(unittest.TestCase):
          
         self.assertTrue(verify_signature_check(client_key, check_signature, base64_check))
          
-        # TO DO: change check and check not ok
-        
+        #
+        false_check = unserialize(base64_check)
+        false_check["amount"] = 100 
+        false_check_64 = serialize(false_check).decode()
+        self.assertFalse(verify_signature_check(client_key, check_signature, false_check_64))
