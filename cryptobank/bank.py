@@ -6,7 +6,7 @@ import sys
 import argparse
 
 from cryptobank.monrsa.crypto import Key
-from cryptobank.monrsa.tools import save_rsa_keys, generate_database, unserialize
+from cryptobank.monrsa.tools import save_rsa_keys, generate_database, unserialize, create_data_to_sign
 
 
 def verify(check, pubkey):
@@ -96,9 +96,10 @@ def deposit(arguments):
     dic_check = unserialize(base64_check)
     # the customer's signature (the one used to sign the check)
     customer_signature = dic_check["signature_customer_public_key"]
+    data_signed_by_customer = create_data_to_sign(base64_check) 
     #if the customer is part of the bank, the signature present in the check should be OK
     # check that the check has not already been cashed-in/altered in some way
-    if verify_signature_check(client_key, check_signature, base64_check):
+    if verify_signature_check(client_key, check_signature, data_signed_by_customer):
 
         if verify_check_first(dic_check):
             print("This check has been cashed in")

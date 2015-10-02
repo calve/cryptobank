@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 from cryptobank.monrsa.crypto import Key
-from cryptobank.monrsa.tools import save_rsa_keys, serialize, unserialize
+from cryptobank.monrsa.tools import save_rsa_keys, serialize, unserialize, create_data_to_sign
 import sys
 import argparse
 import json
@@ -16,6 +16,7 @@ def import_check(path):
     return check_str 
     
 
+
 def sign_check(arguments):
     """
     Import the check to sign
@@ -28,7 +29,10 @@ def sign_check(arguments):
     """
     check = import_check(arguments)
     privatekey = Key.import_key_from_path("customer.key")
-    signature = privatekey.sign(check).decode()
+    
+    data_to_sign = create_data_to_sign(check)
+    signature = privatekey.sign(data_to_sign).decode()
+     
     signed_check = {
         "base64_check": check,
         "signature": signature
@@ -61,6 +65,7 @@ def main():
                            metavar=('CHECK-TO-SIGN'),
                            help="Takes a the customer's signature and a check and sign it.")
     argparser.add_argument("--forge-check",  # This is also a binary option
+                            nargs=2,
                            metavar=('CHECK-TO-SIGN', "TOKEN"),
                            help="Takes a the customer's signature and a check and sign it.")
     arguments = argparser.parse_args()

@@ -3,6 +3,18 @@ import base64
 import json
 
 
+
+
+def create_data_to_sign(check):
+    """
+    Takes the check and
+        - calculate the number of digits nD in the amount field
+        - return a field with #nD#amounttoken
+    """
+    dic_check = unserialize(check)
+    nb_digit_amount = len(str(dic_check["amount"]))
+    return "#" + str(nb_digit_amount) + "#" + dic_check["amount"] + str(dic_check["token"])
+
 def generate_database(db_name):
     """
     Generates a blank file for the bank to use as a database

@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 from cryptobank.monrsa.crypto import Key, generate_keys
-from cryptobank.monrsa.tools import save_rsa_keys, import_key, unserialize, serialize
+from cryptobank.monrsa.tools import save_rsa_keys, import_key, unserialize, serialize, create_data_to_sign
 import argparse
 import sys
 import random
@@ -57,7 +57,6 @@ def new_transaction(signed_key, amount):
 
 
 
-
 def verify_transaction(arguments):
     """
     Checks that the customer's key is valid
@@ -69,7 +68,7 @@ def verify_transaction(arguments):
         Si OK : renvoie 0 sur la sortie standard
         Sinon : renvoie 1
     """
-    if check_key(signed_key) is False:
+    if check_key(arguments[3]) is False:
         print("The client has not got an account with the bank")
         exit(1)
     
@@ -82,9 +81,11 @@ def verify_transaction(arguments):
     signed_transaction = unserialize(signed_check["base64_check"])
     signature = signed_check["signature"]     
     client_key = Key.import_key_from_path(arguments[2]) 
-    # if the two checks match, we just have to check that the signature is ok.
+    data_signed_by_customer = create_data_to_sign(signed_check["base64_check"])
+
+# if the two checks match, we just have to check that the signature is ok.
     if signed_transaction == original_transaction:
-        if client_key.verify(signed_check["base64_check"], signature):
+        if client_key.verify(data_signed_by_customer, signature):
             exit(0)
         else:
             print("The signature does not appear to have been made by the client. Could there be Charly in the middle ? Better being safe than sorry... exiting")
@@ -98,8 +99,8 @@ def main():
     argparser.add_argument("--new-transaction",  # This is a binary option
                            help="Checks that the customer's key is correct and if so, creates a check ready to be signed")
     argparser.add_argument("--verify-transaction",  # This is also a binary option
-                            nargs=3,
-                            metavar=('TRANSACTION.JSON', 'SIGNED_CHECK.JSON', 'CLIENT_PUB_KEY.PUBKEY'),
+                            nargs=4,
+                            metavar=('TRANSACTION.JSON', 'SIGNED_CHECK.JSON', 'CLIENT_PUB_KEY.PUBKEY', 'CLIENT_SIGNED_KEY.SIGNEDKEY'),
                             help="Checks that the check is valid. If it is OK it returns 0, otherwise it returns 1")
     argparser.add_argument("--amount",  # This is also a binary option
                            help="The amount of the transaction")

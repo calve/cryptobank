@@ -23,7 +23,7 @@ echo "[customer] signing the check (importing the private key, taking the check 
 
 echo "[merchant] checking the check is ok"
 # Exit with 0 if OK, 1 if KO
-./merchant --verify-transaction transaction.json check.json customer.pubkey 
+./merchant --verify-transaction transaction.json check.json customer.pubkey customer.signedkey
 
 if [ $? -eq 0 ]
 then
