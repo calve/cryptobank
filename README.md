@@ -26,13 +26,13 @@ Il y a plusieurs choses à vérifier :
 ## Vérification par le marchant que le client est bien un client de la banque
 
   + Le client envoie la signature ainsi que sa clef publique au marchant.
-  + Le marchant vérifie grâce a la clef publique de la banque que la signature du client est valide
   + Le marchant envoie un nombre aléatoire
   + Le client signe avec sa clef privée le message contenant
     - montant de la transaction ``amount``
     - identifiant du commerçant ``merchant_id``
     - numéro aléatoire envoyé par le marchant ``token``
     - clé publique du client ``signed_custommer_public_key``
+  + Le marchant vérifie grâce a la clef publique de la banque que la signature du client est valide
   + Le marchant vérifie que cette signature est valide grâce à la clef publique du client
   + Le marchant vérifie que le contenu du chèque est ce qu'il attend (montant, ordre, nombre aléatoire)
   + Si la signature est valide, il remet le chèque à la banque

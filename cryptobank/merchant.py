@@ -46,25 +46,21 @@ def create_check(signature, amount):
 def new_transaction(signed_key, amount):
     """
     Generates a new transaction.
-    Checks that the customer's key is valid
     Generates a check for the customer to sign
     
     """
     
     # we import the signature
-    # TO DO : check if we need to strip the hard return
     with open(signed_key, "r") as file_:
         signature = file_.readline().strip()
-    if check_key(signed_key):
-        create_check(signature, amount)
-    else:
-        print("The client has not got an account with the bank")
-        exit(1)
+    create_check(signature, amount)
+
 
 
 
 def verify_transaction(arguments):
     """
+    Checks that the customer's key is valid
     Import le check et le transform en dic
     Import la transaction d'origine et la transforme en dic
     Verifie que les informations dans le cheque sont les même qu'il a envoyé
@@ -73,6 +69,10 @@ def verify_transaction(arguments):
         Si OK : renvoie 0 sur la sortie standard
         Sinon : renvoie 1
     """
+    if check_key(signed_key) is False:
+        print("The client has not got an account with the bank")
+        exit(1)
+    
     with open(arguments[0]) as file_:
         original_transaction = unserialize(file_.readline())
     with open(arguments[1]) as file_:
