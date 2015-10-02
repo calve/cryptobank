@@ -57,9 +57,6 @@ class TestCrypto(unittest.TestCase):
             verify_transaction(arguments4)
         the_exception = cm.exception
         self.assertEqual(the_exception.code, 1)
-        #self.assertTrue(bankKey.verify(customer_key, signature))
-        #self.assertFalse(bankKey.verify(customer_key, signature_false))
-        #self.assertFalse(bankKeyFalse.verify(customer_key, signature))
         
     def test_merchant_changed_check(self):
         path = "./cryptobank/test/functionalTests/keys/"
@@ -75,7 +72,7 @@ class TestCrypto(unittest.TestCase):
          
         self.assertTrue(verify_signature_check(client_key, check_signature, base64_check))
          
-        #
+        # check that if someone has changed something to the check, the bank does not accept the check
         false_check = unserialize(base64_check)
         false_check["amount"] = 100 
         false_check_64 = serialize(false_check).decode()
