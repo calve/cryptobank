@@ -17,7 +17,7 @@ def verify(check, pubkey):
 
 
 
-def sign_key(raw_data_path):
+def sign_key(raw_data_path, bank_key="bank.key"):
     """
     Sign the key if the customer
     To do so :
@@ -26,7 +26,7 @@ def sign_key(raw_data_path):
         - we sign the public key
         - we print it
     """
-    bank_key = Key.import_key_from_path("bank.key")
+    bank_key = Key.import_key_from_path(bank_key)
     with open(raw_data_path, "r") as file_:
         data = file_.read()
     return bank_key.sign(data)
