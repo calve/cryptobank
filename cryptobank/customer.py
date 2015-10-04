@@ -37,7 +37,7 @@ def sign_check(arguments, customer_key="customer.key"):
         "base64_check": check,
         "signature": signature
     }
-    print(serialize(signed_check).decode())
+    return serialize(signed_check).decode()
 
 
 def forge_check(arguments):
@@ -74,7 +74,7 @@ def main():
     if arguments.generate_keys:
         save_rsa_keys("customer.pubkey", "customer.key")
     if arguments.sign_check:
-        sign_check(arguments.sign_check)
+        print(sign_check(arguments.sign_check))
     if arguments.forge_check:
         print(forge_check(arguments.forge_check))
 
