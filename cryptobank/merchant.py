@@ -41,7 +41,7 @@ def create_check(signature, amount):
         "merchant_id": "01",
         "token": random_number
     }
-    print(serialize(check).decode())
+    return serialize(check).decode()
 
 def new_transaction(signed_key, amount):
     """
@@ -53,7 +53,7 @@ def new_transaction(signed_key, amount):
     # we import the signature
     with open(signed_key, "r") as file_:
         signature = file_.readline().strip()
-    create_check(signature, amount)
+    return create_check(signature, amount)
 
 
 
@@ -112,7 +112,7 @@ def main():
     # Now do things depending of the collected arguments
     if arguments.new_transaction:
         if arguments.amount:
-            new_transaction(arguments.new_transaction, arguments.amount)   
+            print(new_transaction(arguments.new_transaction, arguments.amount))
         else:
             print("ko")
     if arguments.verify_transaction:
