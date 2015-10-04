@@ -1,7 +1,7 @@
 import unittest
 import string
 import random
-import cryptobank.merchant
+from cryptobank.merchant import new_transaction
 from cryptobank.bank import sign_key
 from cryptobank.monrsa.crypto import Key, generate_keys
 from cryptobank.monrsa.tools import import_key
@@ -29,9 +29,12 @@ class TestCrypto(unittest.TestCase):
             file_.write(str(self.bankKey.get_private().decode()))
         with open(path + "customer.pubkey", "w") as file_:
             file_.write(str(self.customerKey.get_pub().decode()))
-        
+        with open(path + "customer.signedkey", "w") as file_:
+            file_.write(str(self.customerKey.get_pub().decode()))
         self.signature = sign_key(path + "customer.pubkey", path + "bank.key")
         self.signature_false = sign_key(path + "customer.pubkey", path + "bankFalse.key")
+        with open(path + "transaction.json", "w") as file_:
+            file_.write(new_transaction())
 
 
 
