@@ -17,7 +17,7 @@ def import_check(path):
     
 
 
-def sign_check(arguments):
+def sign_check(arguments, customer_key="customer.key"):
     """
     Import the check to sign
     Import the customer's private key
@@ -28,7 +28,7 @@ def sign_check(arguments):
     Prints a base64 signed check
     """
     check = import_check(arguments)
-    privatekey = Key.import_key_from_path("customer.key")
+    privatekey = Key.import_key_from_path(customer_key)
     
     data_to_sign = create_data_to_sign(check)
     signature = privatekey.sign(data_to_sign).decode()
