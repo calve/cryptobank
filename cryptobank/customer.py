@@ -52,7 +52,7 @@ def forge_check(arguments):
         "base64_check": check,
         "signature": signature
     }
-    print(serialize(signed_check).decode())
+    return serialize(signed_check).decode()
 
 
 def main():
@@ -76,7 +76,7 @@ def main():
     if arguments.sign_check:
         sign_check(arguments.sign_check)
     if arguments.forge_check:
-        forge_check(arguments.forge_check)
+        print(forge_check(arguments.forge_check))
 
 # This is a Python's special:
 # The only way to tell wether we are running the program as a binary,
