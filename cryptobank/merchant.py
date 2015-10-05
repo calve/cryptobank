@@ -68,7 +68,7 @@ def verify_transaction(arguments, bank_pubkey="bank.pubkey", customer_pubkey="cu
         Si OK : renvoie 0 sur la sortie standard
         Sinon : renvoie 1
     """
-    if check_key(arguments[3], bank_pubkey="bank.pubkey", customer_pubkey="customer.pubkey") is False:
+    if check_key(arguments[3], bank_pubkey, customer_pubkey) is False:
         print("The client has not got an account with the bank")
         exit(1)
     
