@@ -40,13 +40,13 @@ def sign_check(arguments, customer_key="customer.key"):
     return serialize(signed_check).decode()
 
 
-def forge_check(arguments):
+def forge_check(arguments, customer_key="customer.key"):
     check = import_check(arguments[0])
-    privatekey = Key.import_key_from_path("customer.key")
+    privatekey = Key.import_key_from_path(customer_key)
     dic_check = unserialize(check)
     dic_check["token"] = arguments[1]
     check = serialize(dic_check).decode()
-    privatekey = Key.import_key_from_path("customer.key")
+    privatekey = Key.import_key_from_path(customer_key)
     signature = privatekey.sign(check).decode()
     signed_check = {
         "base64_check": check,
