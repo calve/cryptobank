@@ -39,6 +39,14 @@ class TestCrypto(unittest.TestCase):
         signature = key.sign(publickey)
         self.assertTrue(key.verify(publickey, signature))
 
+    def test_verify_with_other_key(self):
+        key1 = self.keys
+        key2 = generate_keys()
+        random_word = randomword(2 ** 10)
+        signature = key1.sign(random_word)
+        # now verify that key2 does not verify the signature
+        self.assertFalse(key2.verify(random_word, signature))
+
     def test_prime(self):
         for n in [3, 5, 7, 13, 17, 31]:
             self.assertTrue(_is_prime(n))
