@@ -1,4 +1,7 @@
-from math import gcd
+try:
+    from math import gcd
+except ImportError:
+    from fractions import gcd
 from functools import reduce
 from itertools import count, islice
 from math import sqrt
