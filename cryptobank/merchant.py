@@ -11,7 +11,7 @@ def print_error(string):
     return False
 
 
-def check_key(signed_key):
+def check_key(signed_key, bank_pubkey="bank.pubkey", customer_pubkey="customer.pubkey"):
 
     """
     Will check that the key passed as a parameter is correct
@@ -20,9 +20,9 @@ def check_key(signed_key):
         - opens the client's public key
         - checks the key again the signature
     """
-    bank_key  = Key.import_key_from_path("bank.pubkey")
+    bank_key  = Key.import_key_from_path(bank_pubkey)
     signature = import_key(signed_key)
-    with open("customer.pubkey", "r") as file_:
+    with open(customer_pubkey, "r") as file_:
        customer_key = file_.read()
     if bank_key.verify(customer_key, signature):
         return True
@@ -57,7 +57,7 @@ def new_transaction(signed_key, amount):
 
 
 
-def verify_transaction(arguments):
+def verify_transaction(arguments, bank_pubkey="bank.pubkey", customer_pubkey="customer.pubkey"):
     """
     Checks that the customer's key is valid
     Import le check et le transform en dic
@@ -68,7 +68,7 @@ def verify_transaction(arguments):
         Si OK : renvoie 0 sur la sortie standard
         Sinon : renvoie 1
     """
-    if check_key(arguments[3]) is False:
+    if check_key(arguments[3], bank_pubkey="bank.pubkey", customer_pubkey="customer.pubkey") is False:
         print("The client has not got an account with the bank")
         exit(1)
     
