@@ -1,4 +1,4 @@
-from fractions import gcd
+from math import gcd
 from functools import reduce
 from itertools import count, islice
 from math import sqrt
