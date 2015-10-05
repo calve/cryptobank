@@ -17,11 +17,11 @@ class TestBlocks(unittest.TestCase):
         self.assertEqual(assemble(blocks), rawdata)
         self.assertNotEqual(assemble(blocks[:-1]), rawdata)
 
-    def test_short_word(self):
-        rawdata = bytes(randomword(40).encode())
-        blocks = split(rawdata, 15)
-        self.assertEqual(assemble(blocks), rawdata)
-        self.assertNotEqual(assemble(blocks[:-1]), rawdata)
+    def test_all_word(self):
+        for i in range(1, 2**10):
+            rawdata = bytes(randomword(i).encode())
+            blocks = split(rawdata, 15)
+            self.assertEqual(assemble(blocks), rawdata)
 
     def test_padd_one(self):
         rawdata = bytes(randomword(29).encode())
