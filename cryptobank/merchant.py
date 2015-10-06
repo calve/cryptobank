@@ -89,6 +89,7 @@ def verify_transaction(arguments, bank_pubkey="bank.pubkey", customer_pubkey="cu
             exit(0)
         else:
             print("The signature does not appear to have been made by the client. Could there be Charly in the middle ? Better being safe than sorry... exiting")
+            exit(1)
     else:
         print("the check the customer has signed is not the same as the one the merchant signed. Exiting")
         exit(1)
@@ -116,6 +117,7 @@ def main():
         else:
             print("ko")
     if arguments.verify_transaction:
+       print(arguments.verify_transaction)
        verify_transaction(arguments.verify_transaction) 
 
 
