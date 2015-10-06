@@ -13,18 +13,30 @@ bankKeyFalse = generate_keys()
 # creation de tout ce qu'il faut pour signer des cheques et les verifier
 with open(path + "bankFalse.key", "w") as file_:
     file_.write(str(bankKey.get_private().decode()))
+
 with open(path + "bank.key", "w") as file_:
     file_.write(str(bankKey.get_private().decode()))
+
+with open(path + "bank.pubkey", "w") as file_:
+    file_.write(str(bankKey.get_pub().decode()))
+
 with open(path + "bank.db", "w") as file_:
     file_.write("")
+
 with open(path + "customer.pubkey", "w") as file_:
     file_.write(str(customerKey.get_pub().decode()))
+
 with open(path + "customer.key", "w") as file_:
     file_.write(str(customerKey.get_private().decode()))
+
 with open(path + "customer.signedkey", "w") as file_:
-    file_.write(str(customerKey.get_pub().decode()))
+    file_.write(sign_key(path + "customer.pubkey", path + "bank.key").decode())
+
+
 signature = sign_key(path + "customer.pubkey", path + "bank.key")
 signature_false = sign_key(path + "customer.pubkey", path + "bankFalse.key")
+
+
 #creation de 2 cheques valide
 print("creation cheque")
 with open(path + "transaction.json", "w") as file_:

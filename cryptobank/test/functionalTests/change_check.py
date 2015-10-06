@@ -17,10 +17,10 @@ class TestCrypto(unittest.TestCase):
     
     def test_customer_change_check(self):
         path = "./cryptobank/test/functionalTests/keys/"
-        arguments1 = [path + "transaction.json", path + "check.json", path + "customer.pubkey"]
-        arguments2 = [path + "transaction2.json", path + "check2.json", path + "customer.pubkey"]
-        arguments3 = [path + "transaction2.json", path + "check.json", path + "customer.pubkey"]
-        arguments4 = [path + "transaction.json", path + "check2.json", path + "customer.pubkey"]
+        arguments1 = [path + "transaction.json", path + "check.json", path + "customer.pubkey", path + "customer.signedkey"]
+        arguments2 = [path + "transaction2.json", path + "check2.json", path + "customer.pubkey", path + "customer.signedkey"]
+        arguments3 = [path + "transaction2.json", path + "check.json", path + "customer.pubkey", path + "customer.signedkey"]
+        arguments4 = [path + "transaction.json", path + "check2.json", path + "customer.pubkey", path + "customer.signedkey"]
         """
         Test that a signed check is correctly recognised by the merchant 
         """
@@ -28,8 +28,10 @@ class TestCrypto(unittest.TestCase):
         """ 
         we check that the check 1 correctly recognised with trasaction 1 
         """
+        with open(path + "bank.db", "w") as file_:
+            file_.write("")
         with self.assertRaises(SystemExit) as cm:
-            verify_transaction(arguments1)
+            verify_transaction(arguments1, path + "bank.pubkey", path + "customer.pubkey")
         the_exception = cm.exception
         self.assertEqual(the_exception.code, 0)
         
@@ -37,7 +39,7 @@ class TestCrypto(unittest.TestCase):
         we check that the check 2 correctly recognised with trasaction 2 
         """
         with self.assertRaises(SystemExit) as cm:
-            verify_transaction(arguments2)
+            verify_transaction(arguments2, path + "bank.pubkey", path + "customer.pubkey")
         the_exception = cm.exception
         self.assertEqual(the_exception.code, 0)
 
@@ -46,7 +48,7 @@ class TestCrypto(unittest.TestCase):
         we check that the check 1 is NOT recognised with trasaction 2 
         """
         with self.assertRaises(SystemExit) as cm:
-            verify_transaction(arguments3)
+            verify_transaction(arguments3, path + "bank.pubkey", path + "customer.pubkey")
         the_exception = cm.exception
         self.assertEqual(the_exception.code, 1)
         
@@ -54,7 +56,7 @@ class TestCrypto(unittest.TestCase):
         we check that the check 2 is NOT recognised with trasaction 1 
         """
         with self.assertRaises(SystemExit) as cm:
-            verify_transaction(arguments4)
+            verify_transaction(arguments4, path + "bank.pubkey", path + "customer.pubkey")
         the_exception = cm.exception
         self.assertEqual(the_exception.code, 1)
         
