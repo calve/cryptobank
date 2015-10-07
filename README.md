@@ -132,3 +132,13 @@ Tests :
   + ex : taper commercar_facture une somme genere une facture
   + on donne ca en entrée d'un autre prog qui génère le
   + pouvoir passer les fichiers d'entrée en param
+
+## Openssl
+
+### To sign data
+
+    sha1sum <data-to-sign> | openssl rsautl -inkey <private.key> -decrypt -raw | base64 > <data.signed>
+
+### Verify data
+
+    base64 --decode <data.signed> | openssl rsautl -pubin -inkey <public.key> -encrypt -raw
