@@ -18,7 +18,7 @@ Le marchant récupère la clef publique de la banque et la stocke
 
 ## Création d'un article
 
-Il y a plusieurs choses à vérifier :
+Il y a plusieurs choses à vérifier :
 
   1. Que le client ne puisse utiliser le même chèque pour plusieurs transaction
   2. Que le marchant ne puisse générer tout plein de chèque valide au nom du client
