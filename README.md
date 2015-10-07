@@ -113,6 +113,14 @@ Run units tests with
     python3 -m unittest
 
 from the root directory
+Tests :
+  + des fonctions principales utilisés par notre bibliothèque rsa
+  + qu'un client ne peut changer le cheque sans que le marchant ne s'en rende compte 
+  + qu'un marchant ne peut changer le cheque sans que la banque ne s'en rendre compte
+  + que un client n'ayant pas une signature de la banque ne puissent pas effectuer d'opérations
+  + que un cheque ne puisse pas être encaissé plusieurs fois
+
+
 
 ## A FAIRE
 
