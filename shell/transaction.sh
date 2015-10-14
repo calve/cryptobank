@@ -33,7 +33,7 @@ function verifyCustomerPubKey {
     # signedCheque.txt customer.pubkey bank.pubkey
     customerPubKey=`getNthLineFile 4 $1`
     echo -n $customerPubKey > $tmp/customKey.tmp
-    ./verify.sh $tmp/customKey.tmp $2 $3 
+    ./verify.sh $tmp/customKey.tmp $2 $3
 }
 
 function verifyChequeSignature {
@@ -77,15 +77,40 @@ function verifyChequeContent {
     if [ "$cheque" != "$transaction" ]
     then
        echo "le cheques et la transaction ne sont pas le meme. exit"
-       return 1 
+       return 1
     fi
     done
 }
 
-# echo "creation des clefs de la banque"
-# createKeys "bank"
-# echo "creation des clefs du client"
-# createKeys "customer"
+function verifyCheckPubkey {
+    # Verify that the signed public key contained in the check have been produced by <pub.key>
+    # usage : verifyCheckPubkey "check.txt" "pub.key"
+
+    pubkey=`getNthLineFile 4 $1`
+    echo -n $pubkey > $tmp/custommer.pubkey.signed
+    verifyCustomerPubKey "$tmp/customer.pubkey.signed" $1 $3
+}
+
+function verifyAndRecordToken {
+    # Usage : verifyAndRecordToken </path/to/database> <cheque.txt>
+    # Fails if token is already in database
+    token=`getNthLineFile 3 $2`
+    database=$1
+    grep -wx "$token" $database
+    if [ $? -ne 0 ]
+    then
+        echo $token >> $database
+    else
+        echo "ERROR : token $token already exists in database"
+        return 1
+    fi
+}
+
+
+echo "creation des clefs de la banque"
+createKeys "bank"
+echo "creation des clefs du client"
+createKeys "customer"
 
 echo "signing the customer's key"
 ./sign.sh customer.pubkey bank.key > customer.pubkey.signed
@@ -116,5 +141,22 @@ fi
 echo "[marchant] Le marchant vérifie que le contenu du chèque est ce qu'il attend (montant, ordre, nombre aléatoire)"
 verifyChequeContent transaction.txt cheque.txt
 
-echo "La banque vérifie la signature du client"
+echo -n "[bank] La banque vérifie la signature du client"
+verifyCustomerPubKey cheque.txt customer.pubkey bank.pubkey
+if [ $? -eq 0 ]
+then
+    echo "... OK"
+else
+    echo "... NOK"
+fi
 
+echo -n "[bank] La banque vérifie le token du marchand"
+touch "bank.db"
+verifyAndRecordToken bank.db cheque.txt
+if [ $? -eq 0 ]
+then
+    echo "... OK"
+    echo "Check cashed in !"
+else
+    echo "... NOK"
+fi
