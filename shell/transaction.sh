@@ -30,6 +30,7 @@ function getNthLineFile {
 }
 
 function verifyCustomerPubKey {
+    # signedCheque.txt customer.pubkey bank.pubkey
     customerPubKey=`getNthLineFile 4 $1`
     echo -n $customerPubKey > $tmp/customKey.tmp
     ./verify.sh $tmp/customKey.tmp $2 $3 
@@ -66,6 +67,7 @@ function signTransaction {
 
 
 function verifyChequeContent {
+    # signedCheck transaction
     for i in `seq 1 4`
     do
     echo $i
@@ -113,3 +115,6 @@ fi
 
 echo "[marchant] Le marchant vérifie que le contenu du chèque est ce qu'il attend (montant, ordre, nombre aléatoire)"
 verifyChequeContent transaction.txt cheque.txt
+
+echo "La banque vérifie la signature du client"
+
