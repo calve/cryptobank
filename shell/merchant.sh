@@ -40,6 +40,7 @@ if [ -z "$1" ]
             c)
                 echo "[marchant] Le marchant vérifie que le contenu du chèque est ce qu'il attend (montant, ordre, nombre aléatoire)"
                 verifyChequeContent $2 $3
+                ;;
             ?) 
                 usage 
                 exit 
