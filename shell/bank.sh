@@ -2,7 +2,7 @@
 . transaction.sh
 
 function usage {
-    echo "-a: creation de la clef de la banke"
+    echo "-a: creation de la clef de la banque"
     echo "-b [cheque.txt][customer.pubkey][bank.pubkey]: verification de la signature du client"
     echo "-c [bank.db][cheque.txt]: encaissement du cheque"
 
