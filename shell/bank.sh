@@ -4,6 +4,7 @@
 function usage {
     echo "-a: creation de la clef de la banque"
     echo "-b [customer.pubkey] [bank.key] [output.key]: signature de la clé du client"
+    echo "-c [cheque] [customer pub key] [bank pub key]: signature de la clé du client"
     echo "-d [bank.db][cheque.txt]: encaissement du cheque"
 
 
@@ -30,6 +31,9 @@ if [ -z "$1" ]
                 else
                     echo "... NOK"
                 fi
+                ;;
+            c)
+                verifyCustomerPubKey $2 $3 $4
                 ;;
             d)
                 echo -n "[bank] La banque vérifie le token du marchand"
