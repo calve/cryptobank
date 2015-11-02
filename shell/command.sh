@@ -11,7 +11,7 @@ echo "[bank] creation des clefs du client"
 echo "[customer] creation des clefs du client"
 ./customer.sh -a
 
-echo "signing the customer's key"
+echo "[bank] signing the customer's key"
 ./bank.sh -b customer.pubkey bank.key customer.pubkey.signed
 
 echo "[marchant] Le marchant crée un chèque avec"
@@ -28,7 +28,7 @@ echo "[marchant] Le marchant vérifie que le contenu du chèque est ce qu'il att
 ./merchant.sh -c transaction.txt cheque.txt
 
 echo -n "[bank] La banque vérifie la signature du client"
-./bank.sh -b cheque.txt customer.pubkey bank.pubkey
+./bank.sh -c cheque.txt customer.pubkey bank.pubkey
 
 echo -n "[bank] La banque vérifie le token du marchand"
-./bank.sh -c bank.db cheque.txt
+./bank.sh -d bank.db cheque.txt
