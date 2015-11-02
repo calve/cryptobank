@@ -21,7 +21,6 @@ if [ -z "$1" ]
                 createKeys "bank"
                 ;; 
             b)
-                echo $2
                 echo -n "[bank] La banque vérifie la signature du client"
                 verifyCustomerPubKey $2 $3 $4
                 if [ $? -eq 0 ]
