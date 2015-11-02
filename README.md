@@ -18,7 +18,7 @@ Le marchant récupère la clef publique de la banque et la stocke
 
 ## Création d'un article
 
-Il y a plusieurs choses à vérifier :
+Il y a plusieurs choses à vérifier :
 
   1. Que le client ne puisse utiliser le même chèque pour plusieurs transaction
   2. Que le marchant ne puisse générer tout plein de chèque valide au nom du client
@@ -26,12 +26,15 @@ Il y a plusieurs choses à vérifier :
 ## Vérification par le marchant que le client est bien un client de la banque
 
   + Le client envoie la signature ainsi que sa clef publique au marchant.
-  + Le marchant envoie un nombre aléatoire
-  + Le client signe avec sa clef privée le message contenant
+  + Le marchant crée un chèque avec
     - montant de la transaction ``amount``
     - identifiant du commerçant ``merchant_id``
     - numéro aléatoire envoyé par le marchant ``token``
     - clé publique du client ``signed_custommer_public_key``
+  + Le client signe avec sa clef privée le message contenant
+    - montant de la transaction ``amount``
+    - identifiant du commerçant ``merchant_id``
+    - numéro aléatoire envoyé par le marchant ``token``
   + Le marchant vérifie grâce a la clef publique de la banque que la signature du client est valide
   + Le marchant vérifie que cette signature est valide grâce à la clef publique du client
   + Le marchant vérifie que le contenu du chèque est ce qu'il attend (montant, ordre, nombre aléatoire)
@@ -132,3 +135,13 @@ Tests :
   + ex : taper commercar_facture une somme genere une facture
   + on donne ca en entrée d'un autre prog qui génère le
   + pouvoir passer les fichiers d'entrée en param
+
+## Openssl
+
+### To sign data
+
+    sha1sum <data-to-sign> | openssl rsautl -inkey <private.key> -decrypt -raw | base64 > <data.signed>
+
+### Verify data
+
+    base64 --decode <data.signed> | openssl rsautl -pubin -inkey <public.key> -encrypt -raw
