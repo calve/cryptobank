@@ -3,7 +3,7 @@
 
 function usage {
     echo "-a [montant][id bank][customer signed key]: creation d'un cheque"
-    echo "-b [cheque][customer pub key][bank pub key]: verif clef"
+    echo "-b [cheque][customer pub key][bank pub key][transaction]: verif clef"
     echo "-c [transation][cheque]: verification du cheque"
 
 
@@ -26,7 +26,7 @@ if [ -z "$1" ]
                 if [ $? -eq 0 ]
                 then
                     echo "[marchant] Le marchant vérifie que cette signature est valide grâce à la clef publique du client"
-                    verifyChequeSignature $2 $3 $4
+                    verifyChequeSignature $2 $5 $3
                     if [ $? -eq 0 ]
                     then
                         echo "[marchant] Le marchant vérifie que cette signature est valide grâce à la clef publique du client"
