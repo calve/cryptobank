@@ -2,6 +2,13 @@
 . transaction.sh
 
 
+function usage {
+    echo "-a: creation de la clef du client"
+    echo "-b [customer.pubkey][bank.key]: signature de la clef du client"
+    echo "-c [transaction][cheque]: signature de la transaction"
+
+
+}
 
 if [ -z "$1" ] 
   then 
@@ -16,12 +23,12 @@ if [ -z "$1" ]
                 ;; 
             b)   
                 echo "signing the customer's key"
-                ./sign.sh customer.pubkey bank.key > customer.pubkey.signed
-
+                ./sign.sh $2 $3 
+                ;;
             c)
                 echo "[client] Le client signe avec sa clef privée le message contenant"
-                signTransaction transaction.txt cheque.txt
-
+                signTransaction $2 $3
+                ;;
             ?) 
                 usage 
                 exit 

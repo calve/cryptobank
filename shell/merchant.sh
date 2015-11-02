@@ -1,25 +1,32 @@
 #!/bin/bash
 . transaction.sh
 
+function usage {
+    echo "-a [montant][id bank][customer signed key]: creation d'un cheque"
+    echo "-b [cheque][customer pub key][bank pub key]: verif clef"
+    echo "-c [transation][cheque]: verification du cheque"
+
+
+}
 if [ -z "$1" ] 
   then 
     usage 
   else 
-    while getopts “Ahpvozacn” OPTION 
+    while getopts “abc” OPTION 
     do 
         case $OPTION in 
             a) 
                 echo "[marchant] Le marchant crée un chèque avec"
-                createTransaction 40 1 customer.pubkey.signed > transaction.txt
+                createTransaction $2 $3 $4 
                 ;; 
 
             b)
                 echo "[marchant] Le marchant vérifie grâce a la clef publique de la banque que la signature du client est valide"
-                verifyCustomerPubKey cheque.txt customer.pubkey bank.pubkey
+                verifyCustomerPubKey $2 $3 $4 
                 if [ $? -eq 0 ]
                 then
                     echo "[marchant] Le marchant vérifie que cette signature est valide grâce à la clef publique du client"
-                    verifyChequeSignature cheque.txt transaction.txt customer.pubkey
+                    verifyChequeSignature $2 $3 $4
                     if [ $? -eq 0 ]
                     then
                         echo "[marchant] Le marchant vérifie que cette signature est valide grâce à la clef publique du client"
@@ -30,6 +37,9 @@ if [ -z "$1" ]
                     echo "There was a problem with this check"
                 fi
                 ;;
+            c)
+                echo "[marchant] Le marchant vérifie que le contenu du chèque est ce qu'il attend (montant, ordre, nombre aléatoire)"
+                verifyChequeContent $2 $3
             ?) 
                 usage 
                 exit 
