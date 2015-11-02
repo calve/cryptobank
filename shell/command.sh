@@ -6,7 +6,7 @@
 ./customer.sh -a
 
 # "signing the customer's key"
-./bank.sh -b sign.sh customer.pubkey bank.key > customer.pubkey.signed
+./bank.sh -b customer.pubkey bank.key customer.pubkey.signed
 
 # "[marchant] Le marchant crée un chèque avec"
 ./merchant.sh -a 40 1 customer.pubkey.signed > transaction.txt
