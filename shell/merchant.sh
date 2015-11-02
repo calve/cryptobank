@@ -16,12 +16,10 @@ if [ -z "$1" ]
     do 
         case $OPTION in 
             a) 
-                echo "[marchant] Le marchant crée un chèque avec"
                 createTransaction $2 $3 $4 
                 ;; 
 
             b)
-                echo "[marchant] Le marchant vérifie grâce a la clef publique de la banque que la signature du client est valide"
                 verifyCustomerPubKey $2 $3 $4 
                 if [ $? -eq 0 ]
                 then

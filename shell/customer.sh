@@ -14,19 +14,19 @@ if [ -z "$1" ]
   then 
     usage 
   else 
-    while getopts “Ahpvozacn” OPTION 
+    while getopts “abc” OPTION 
     do 
         case $OPTION in 
             a) 
-                echo "creation des clefs du client"
+                #echo "creation des clefs du client"
                 createKeys "customer"
                 ;; 
             b)   
-                echo "signing the customer's key"
+                #echo "signing the customer's key"
                 ./sign.sh $2 $3 
                 ;;
             c)
-                echo "[client] Le client signe avec sa clef privée le message contenant"
+                #echo "[client] Le client signe avec sa clef privée le message contenant"
                 signTransaction $2 $3
                 ;;
             ?) 

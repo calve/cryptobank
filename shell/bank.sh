@@ -4,7 +4,7 @@
 function usage {
     echo "-a: creation de la clef de la banque"
     echo "-b [customer.pubkey] [bank.key] [output.key]: signature de la clé du client"
-    echo "-c [bank.db][cheque.txt]: encaissement du cheque"
+    echo "-d [bank.db][cheque.txt]: encaissement du cheque"
 
 
 }
@@ -13,7 +13,7 @@ if [ -z "$1" ]
   then 
     usage 
   else 
-    while getopts “abc” OPTION 
+    while getopts “abcd” OPTION 
     do 
         case $OPTION in 
             a) 
@@ -31,7 +31,7 @@ if [ -z "$1" ]
                     echo "... NOK"
                 fi
                 ;;
-            c)
+            d)
                 echo -n "[bank] La banque vérifie le token du marchand"
                 touch "bank.db"
                 verifyAndRecordToken $2 $3
