@@ -33,6 +33,7 @@ if [ -z "$1" ]
                 fi
                 ;;
             c)
+                echo "[bank] Vérification de la clef du client"
                 verifyCustomerPubKey $2 $3 $4
                 ;;
             d)
