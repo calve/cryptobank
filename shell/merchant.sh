@@ -23,21 +23,28 @@ if [ -z "$1" ]
                 verifyCustomerPubKey $2 $3 $4 
                 if [ $? -eq 0 ]
                 then
-                    echo "[marchant] Le marchant vérifie que cette signature est valide grâce à la clef publique du client"
+                    # echo "[marchant] Le marchant vérifie que cette signature est valide grâce à la clef publique du client"
                     verifyChequeSignature $2 $5 $3
                     if [ $? -eq 0 ]
                     then
                         echo "[marchant] OK" 
                     else
                         echo "soucis"
+                        exit 1
                     fi
                 else
                     echo "There was a problem with this check"
+                    exit 1
                 fi
                 ;;
             c)
-                echo "[marchant] Le marchant vérifie que le contenu du chèque est ce qu'il attend (montant, ordre, nombre aléatoire)"
+                # echo "[marchant] Le marchant vérifie que le contenu du chèque est ce qu'il attend (montant, ordre, nombre aléatoire)"
                 verifyChequeContent $2 $3
+                if [ $? -ne 0 ]
+                then
+                    echo "Le cheque n'est pas le meme"
+                    exit 1
+                fi
                 ;;
             ?) 
                 usage 
