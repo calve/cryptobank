@@ -134,6 +134,13 @@ function test3 {
 
 }
 
+function test4 {
+    normalTest
+    echo "TESTING RE-CASHING CHECK"
+    ./bank.sh -d bank.db cheque.txt
+}
+
+
 function usage {
     echo "-a: normal transaction"
     echo "-b: vérification que client ne peut changer le cheque sans que le marchant ne s'en rende compte"
@@ -146,7 +153,7 @@ if [ -z "$1" ]
   then 
     usage 
   else 
-    while getopts “abcdR” OPTION 
+    while getopts “abcdeR” OPTION 
     do 
         case $OPTION in 
             a) 
@@ -160,6 +167,9 @@ if [ -z "$1" ]
                 ;; 
             d) 
                 test3
+                ;; 
+            e) 
+                test4
                 ;; 
             R) 
                 cleanDir
