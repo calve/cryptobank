@@ -150,23 +150,18 @@ if [ -z "$1" ]
     do 
         case $OPTION in 
             a) 
-                echo "creation des clefs de la banque"
                 normalTest
                 ;; 
             b) 
-                echo "creation des clefs de la banque"
                 test1
                 ;; 
             c) 
-                echo "creation des clefs de la banque"
                 test2
                 ;; 
             d) 
-                echo "creation des clefs de la banque"
                 test3
                 ;; 
             R) 
-                echo "Cleaning dir"
                 cleanDir
                 ;; 
             ?) 
