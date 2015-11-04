@@ -37,7 +37,7 @@ pouvai
 
 ## Tests
 
-Les tests disponibles sont:
+Les tests disponibles sont "re-jouable" avec le fichier command:
 
 ### Fonctionnement nominal
 
