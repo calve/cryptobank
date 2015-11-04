@@ -46,8 +46,8 @@ function verifyChequeSignature {
     signatureCheque=`getNthLineFile 5 $1`
     echo -n $signatureCheque > $tmp/signatureCheque.tmp
     echo -n $signatureOriginal > $tmp/signatureOriginal.tmp
-    echo $tmp/signatureCheque.tmp
-    echo $tmp/signatureOriginal.tmp
+    # echo $tmp/signatureCheque.tmp
+    # echo $tmp/signatureOriginal.tmp
 
     ./verify.sh $tmp/signatureCheque.tmp $tmp/signatureOriginal.tmp $3
 }
@@ -71,14 +71,13 @@ function verifyChequeContent {
     # signedCheck transaction
     for i in `seq 1 4`
     do
-    echo $i
     cheque=`getNthLineFile $i $1`
     transaction=`getNthLineFile $i $2`
 
     if [ "$cheque" != "$transaction" ]
     then
        echo "le cheques et la transaction ne sont pas le meme. exit"
-       return 1
+       exit 1
     fi
     done
 }
