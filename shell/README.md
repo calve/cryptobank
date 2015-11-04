@@ -44,6 +44,8 @@ Les tests disponibles sont:
 Tout les acteurs sont honnêtes, le chèque est signé et encaissé par la
 banque.
 
+    ./command.sh -a
+
     [bank] creation des clefs du client
     Generating RSA private key, 1024 bit long modulus
     .................................++++++
@@ -70,6 +72,8 @@ banque.
 
 ### Tentative de fraude : Le client modifie le chèque qu'il signe, le marchand ne l'accepte pas
 
+    ./command.sh -b
+
     [bank] creation des clefs du client
     Generating RSA private key, 1024 bit long modulus
     .............++++++
@@ -95,6 +99,8 @@ banque.
 
 
 ### Tentative de fraude : Le marchand modifie le chèque à l'insu du client, la banque ne l'accepte pas
+
+    ./command.sh -c
 
     rm: impossible de supprimer « *db »: Aucun fichier ou dossier de ce type
     [bank] creation des clefs du client
@@ -123,6 +129,8 @@ banque.
 
 
 ### Tentative de fraude : Le client n'a pas de compte à la banque, le marchand ne l'accepte pas
+
+    ./command.sh -d
 
     =============FAUSSAIRE===============
     [bank fausse] creation des clefs du client
@@ -153,6 +161,8 @@ banque.
 
 
 ### Tentative de fraude : Le marchand essaie d'encaisser plusieurs fois le même chèque, la banque ne l'accepte pas
+
+    ./command.sh -e
 
     [bank] creation des clefs du client
     Generating RSA private key, 1024 bit long modulus
