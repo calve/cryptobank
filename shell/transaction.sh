@@ -77,7 +77,7 @@ function verifyChequeContent {
     if [ "$cheque" != "$transaction" ]
     then
        echo "le cheques et la transaction ne sont pas le meme. exit"
-       exit 1
+       return 1
     fi
     done
 }

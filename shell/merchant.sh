@@ -27,13 +27,14 @@ if [ -z "$1" ]
                     verifyChequeSignature $2 $3
                     if [ $? -eq 0 ]
                     then
-                        echo "[marchant] OK" 
+                        echo "[marchant] OK"
                     else
-                        echo "soucis"
+                        echo "[marchant] NOK"
                         exit 1
                     fi
                 else
-                    echo "There was a problem with this check"
+                    echo "[merchant] There was a problem with this check"
+                    echo "[marchant] NOK"
                     exit 1
                 fi
                 ;;
@@ -42,7 +43,8 @@ if [ -z "$1" ]
                 verifyChequeContent $2 $3
                 if [ $? -ne 0 ]
                 then
-                    echo "Le cheque n'est pas le meme"
+                    echo "[merchant] Le cheque n'est pas le meme"
+                    echo "[marchant] NOK"
                     exit 1
                 fi
                 ;;

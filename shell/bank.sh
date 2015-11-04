@@ -32,7 +32,7 @@ if [ -z "$1" ]
                 verifyCustomerPubKey $2 $3 $4
                 if [ $? -ne 0 ]
                 then
-                    echo "La clef du client n'est pas valide"
+                    echo "[bank] La clef du client n'est pas valide"
                     exit 1
                 fi 
 
@@ -42,7 +42,8 @@ if [ -z "$1" ]
                 verifyChequeSignature $3 $4
                 if [ $? -ne 0 ]
                 then
-                    echo "Le marchand a changé le cheque"
+                    echo "[bank] Le marchand a changé le cheque"
+                    echo "[bank] NOK"
                     exit 1
                 fi 
                 # echo -n "[bank] La banque vérifie le token du marchand"
@@ -50,10 +51,10 @@ if [ -z "$1" ]
                 verifyAndRecordToken $2 $3
                 if [ $? -eq 0 ]
                 then
-                    echo "... OK"
-                    echo "Check cashed in !"
+                    echo "[bank] Check cashed in !"
+                    echo "[bank] OK"
                 else
-                    echo "... NOK"
+                    echo "[bank] NOK"
                     exit 1
                 fi
                 ;;

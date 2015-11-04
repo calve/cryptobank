@@ -31,10 +31,10 @@ function normalTest {
     echo "[marchant] Le marchant vérifie que le contenu du chèque est ce qu'il attend (montant, ordre, nombre aléatoire)"
     ./merchant.sh -c transaction.txt cheque.txt &&
 
-    echo -n "[bank] La banque vérifie la signature du client"
+    echo "[bank] La banque vérifie la signature du client"
     ./bank.sh -c cheque.txt customer.pubkey bank.pubkey &&
 
-    echo -n "[bank] La banque vérifie le token du marchand"
+    echo "[bank] La banque vérifie le token du marchand"
     ./bank.sh -d bank.db cheque.txt customer.pubkey
 }
 
@@ -66,10 +66,10 @@ function test1 {
     echo "[marchant] Le marchant vérifie que le contenu du chèque est ce qu'il attend (montant, ordre, nombre aléatoire)" &&
     ./merchant.sh -c transaction.txt cheque.txt &&
 
-    echo -n "[bank] La banque vérifie la signature du client" &&
+    echo "[bank] La banque vérifie la signature du client" &&
     ./bank.sh -c cheque.txt customer.pubkey bank.pubkey &&
 
-    echo -n "[bank] La banque vérifie le token du marchand" &&
+    echo "[bank] La banque vérifie le token du marchand" &&
     ./bank.sh -d bank.db cheque.txt customer.pubkey
 }
 
@@ -101,10 +101,10 @@ function test2 {
     echo "[marchant] Forgerie du cheque" &&
     sed -i -e 's/40/41/g' cheque.txt &&
     
-    echo -n "[bank] La banque vérifie la signature du client" &&
+    echo "[bank] La banque vérifie la signature du client" &&
     ./bank.sh -c cheque.txt customer.pubkey bank.pubkey &&
 
-    echo -n "[bank] La banque vérifie le chèque et le token du marchand" &&
+    echo "[bank] La banque vérifie le chèque et le token du marchand" &&
     ./bank.sh -d bank.db cheque.txt customer.pubkey
 
 }
