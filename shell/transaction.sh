@@ -39,17 +39,17 @@ function verifyCustomerPubKey {
 
 function verifyChequeSignature {
     # <signe> <original> <<public_key_to_use>
-    montant=`getNthLineFile 1 $2`
-    id_marchant=`getNthLineFile 2 $2`
-    token=`getNthLineFile 3 $2`
-    signatureOriginal="$montant#$id_marchant#$token"
-    signatureCheque=`getNthLineFile 5 $1`
-    echo -n $signatureCheque > $tmp/signatureCheque.tmp
-    echo -n $signatureOriginal > $tmp/signatureOriginal.tmp
-    # echo $tmp/signatureCheque.tmp
-    # echo $tmp/signatureOriginal.tmp
+    montant=`getNthLineFile 1 $1`
+    id_marchant=`getNthLineFile 2 $1`
+    token=`getNthLineFile 3 $1`
 
-    ./verify.sh $tmp/signatureCheque.tmp $tmp/signatureOriginal.tmp $3
+    transactionOriginal="$montant#$id_marchant#$token"
+    signatureCheque=`getNthLineFile 5 $1`
+
+    echo -n $signatureCheque > $tmp/signatureCheque.tmp
+    echo -n $transactionOriginal > $tmp/transactionOriginal.tmp
+
+    ./verify.sh $tmp/signatureCheque.tmp $tmp/transactionOriginal.tmp $2
 }
 
 function signTransaction {

@@ -35,7 +35,7 @@ function normalTest {
     ./bank.sh -c cheque.txt customer.pubkey bank.pubkey &&
 
     echo -n "[bank] La banque vérifie le token du marchand"
-    ./bank.sh -d bank.db cheque.txt transaction.txt customer.pubkey
+    ./bank.sh -d bank.db cheque.txt customer.pubkey
 }
 
 function test1 {
@@ -70,10 +70,12 @@ function test1 {
     ./bank.sh -c cheque.txt customer.pubkey bank.pubkey &&
 
     echo -n "[bank] La banque vérifie le token du marchand" &&
-    ./bank.sh -d bank.db cheque.txt transaction.txt customer.pubkey
+    ./bank.sh -d bank.db cheque.txt customer.pubkey
 }
 
 function test2 {
+    #vérification qu'un marchant ne peut changer le cheque sans que la banque ne s'en rendre compte
+
     cleanDir
     echo "[bank] creation des clefs du client" &&
     ./bank.sh -a &&
@@ -100,10 +102,10 @@ function test2 {
     sed -i -e 's/40/41/g' cheque.txt &&
     
     echo -n "[bank] La banque vérifie la signature du client" &&
-    ./bank.sh -c cheque.txt customer.pubkey bank.pubke &&
+    ./bank.sh -c cheque.txt customer.pubkey bank.pubkey &&
 
-    echo -n "[bank] La banque vérifie le token du marchand" &&
-    ./bank.sh -d bank.db cheque.txt transaction.txt customer.pubkey
+    echo -n "[bank] La banque vérifie le chèque et le token du marchand" &&
+    ./bank.sh -d bank.db cheque.txt customer.pubkey
 
 }
 
@@ -140,7 +142,7 @@ function test3 {
 function test4 {
     normalTest
     echo "TESTING RE-CASHING CHECK"
-    ./bank.sh -d bank.db cheque.txt transaction.txt customer.pubkey
+    ./bank.sh -d bank.db cheque.txt customer.pubkey
 }
 
 

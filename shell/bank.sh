@@ -39,7 +39,7 @@ if [ -z "$1" ]
                 ;;
             d)
                 # echo"[bank] Vérification de la clef du client"
-                verifyChequeSignature $3 $4 $5
+                verifyChequeSignature $3 $4
                 if [ $? -ne 0 ]
                 then
                     echo "Le marchand a changé le cheque"
